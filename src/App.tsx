@@ -1,26 +1,39 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
+import {TaskType, Todolist} from './Todolist';
+
+export type FilterValuesType = 'All' | 'Active' | 'Completed';
 
 function App() {
+    const [tasks, setTask] = useState<TaskType[]>([
+        {id: 1, title: 'HTML5', isDone: true},
+        {id: 2, title: 'SCSS', isDone: false},
+        {id: 3, title: 'Javascript ES6', isDone: false}
+    ]);
+    const [filter, setFilter] = useState<FilterValuesType>('All');
+    const removeTask = (id: number) => {
+        setTask(tasks.filter(t => t.id !== id));
+    };
+    const changeFilter = (value: FilterValuesType) => {
+        setFilter(value);
+    };
+
+    let tasksForTodolist = tasks;
+    if (filter === 'Completed') {
+        tasksForTodolist = tasks.filter(t => t.isDone)
+    }
+    if (filter === 'Active') {
+        tasksForTodolist = tasks.filter(t => !t.isDone)
+    }
+
     return (
         <div className="App">
-            <div>
-                <h3>What to learn</h3>
-                <div>
-                    <input/>
-                    <button>+</button>
-                </div>
-                <ul>
-                    <li><input type="checkbox" checked={true}/> <span>HTML&CSS</span></li>
-                    <li><input type="checkbox" checked={true}/> <span>JS</span></li>
-                    <li><input type="checkbox" checked={false}/> <span>React</span></li>
-                </ul>
-                <div>
-                    <button>All</button>
-                    <button>Active</button>
-                    <button>Completed</button>
-                </div>
-            </div>
+            <Todolist
+                title={'What to learn'}
+                tasks={tasksForTodolist}
+                removeTask={removeTask}
+                changeFilter={changeFilter}
+            />
         </div>
     );
 }
