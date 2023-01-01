@@ -12,6 +12,7 @@ function App() {
         {id: v1(), title: 'Javascript ES6', isDone: false}
     ]);
     const [filter, setFilter] = useState<FilterValuesType>('All');
+
     const removeTask = (id: string) => {
         setTask(tasks.filter(t => t.id !== id));
     };
@@ -21,6 +22,11 @@ function App() {
     };
     const changeFilter = (value: FilterValuesType) => {
         setFilter(value);
+    };
+    const changeTaskStatus = (taskId: string, isDone: boolean) => {
+        const task = tasks.find(t => t.id === taskId);
+        if (task) task.isDone = isDone;
+        setTask([...tasks]);
     };
 
     let tasksForTodolist = tasks;
@@ -36,9 +42,11 @@ function App() {
             <Todolist
                 title={'What to learn'}
                 tasks={tasksForTodolist}
+                filter={filter}
                 removeTask={removeTask}
                 addTask={addTask}
                 changeFilter={changeFilter}
+                changeTaskStatus={changeTaskStatus}
             />
         </div>
     );
