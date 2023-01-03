@@ -1,4 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {IconButton, TextField} from '@mui/material';
+import {ControlPoint} from '@mui/icons-material';
 
 type PropsType = {
     addItem: (title: string) => void
@@ -7,17 +9,21 @@ type PropsType = {
 export const AddItemForm = (props: PropsType) => {
     const [title, setTitle] = useState('');
     const [error, setError] = useState<string | null>(null);
+
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setTitle(event.currentTarget.value);
     };
     const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         setError(null);
         if (event.key === 'Enter') {
-            props.addItem(title.trim());
-            setTitle('');
+            if (title.trim() !== '') {
+                props.addItem(title.trim());
+                setTitle('');
+            } else setError('Title is required');
         }
     };
     const onClickHandler = () => {
+        setError(null);
         if (title.trim() !== '') {
             props.addItem(title.trim());
             setTitle('');
@@ -26,17 +32,21 @@ export const AddItemForm = (props: PropsType) => {
 
     return (
         <div>
-            <input
+            <TextField
+                variant={'filled'}
+                label={'Type text'}
                 value={title}
                 onChange={onChangeHandler}
                 onKeyDown={onKeyDownHandler}
-                className={error ? 'error' : ''}
+                error={!!error}
+                helperText={error}
             />
-            <button
+            <IconButton
+                color={'primary'}
                 onClick={onClickHandler}
-            >+
-            </button>
-            {error && <div className={'error-message'}>{error}</div>}
+            >
+                <ControlPoint/>
+            </IconButton>
         </div>
     );
 };

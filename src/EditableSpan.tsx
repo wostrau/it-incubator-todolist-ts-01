@@ -1,4 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
+import {TextField} from '@mui/material';
 
 type PropsType = {
     title: string
@@ -8,6 +9,7 @@ type PropsType = {
 export const EditableSpan = (props: PropsType) => {
     const [editMode, setEditMode] = useState(false);
     const [title, setTitle] = useState('');
+
     const activateEditMode = () => {
         setEditMode(true);
         setTitle(props.title);
@@ -21,7 +23,8 @@ export const EditableSpan = (props: PropsType) => {
     };
 
     return editMode
-        ? <input
+        ? <TextField
+            variant={'standard'}
             value={title}
             onChange={onChangeHandler}
             onBlur={activateViewMode}
