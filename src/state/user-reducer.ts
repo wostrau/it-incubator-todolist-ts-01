@@ -9,14 +9,14 @@ type ActionType = {
     [key: string]: any
 }
 
-export const userReducer = (state: StateType, action: ActionType) => {
+export const userReducer = (state: StateType, action: ActionType): StateType => {
     switch (action.type) {
-        case '1':
-            return 1;
-        case '2':
-            return 2;
-        case '3':
-            return 3;
+        case 'INCREMENT-AGE':
+            return {...state, age: state.age + 1};
+        case 'INCREMENT-CHILDREN-COUNT':
+            return {...state, childrenCount: state.childrenCount + 1};
+        case 'CHANGE-USER-NAME':
+            return {...state, name: action.newName};
         default:
             throw new Error('I don\'t know this type of action');
     }
