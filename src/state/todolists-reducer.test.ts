@@ -1,5 +1,5 @@
 import {v1} from 'uuid';
-import {FilterValuesType, TodolistType} from '../App';
+import {FilterValuesType, TodolistType} from '../AppWithRedux';
 import {
     addTodolistAC,
     changeTodolistFilterAC,
@@ -25,7 +25,7 @@ test('correct todolist should be added correctly', () => {
     const newTitle = 'What to do';
     const endState = todolistsReducer(startState, addTodolistAC(newTitle));
     expect(endState.length).toBe(3);
-    expect(endState[2].title).toBe(newTitle);
+    expect(endState[0].title).toBe(newTitle);
 });
 test('correct todolist title should be changed', () => {
     const startState: TodolistType[] = [
