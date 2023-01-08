@@ -25,7 +25,7 @@ export type TaskType = {
     isDone: boolean
 }
 export type TasksStateType = {
-    [key: string]: Array<TaskType>
+    [key: string]: TaskType[]
 }
 
 function AppWithRedux() {
