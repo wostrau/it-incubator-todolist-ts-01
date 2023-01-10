@@ -1,6 +1,5 @@
 import React, {MouseEventHandler, useCallback} from 'react';
 import './App.css';
-import {FilterValuesType, TaskType} from './AppWithRedux';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {Button, IconButton} from '@mui/material';
@@ -9,6 +8,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
 import {Task} from './Task';
+import {TaskStatuses, TaskType} from './api/todolists-api';
+import {FilterValuesType} from './state/todolists-reducer';
 
 type PropsType = {
     id: string
@@ -27,8 +28,8 @@ export const Todolist = React.memo((props: PropsType) => {
     const removeTask = useCallback((taskId: string) => {
         dispatch(removeTaskAC(props.id, taskId))
     }, [dispatch, props.id]);
-    const changeTaskStatus = useCallback((taskId: string, isDone: boolean) => {
-        dispatch(changeTaskStatusAC(props.id, taskId, isDone))
+    const changeTaskStatus = useCallback((taskId: string, status: TaskStatuses) => {
+        dispatch(changeTaskStatusAC(props.id, taskId, status))
     }, [dispatch, props.id]);
     const changeTaskTitle = useCallback((taskId: string, newTitle: string) => {
         dispatch(changeTaskTitleAC(props.id, taskId, newTitle));
@@ -52,8 +53,8 @@ export const Todolist = React.memo((props: PropsType) => {
 
     const tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[props.id]);
     let tasksForTodolist = tasks;
-    if (props.filter === 'active') tasksForTodolist = tasks.filter(t => !t.isDone);
-    if (props.filter === 'completed') tasksForTodolist = tasks.filter(t => t.isDone);
+    if (props.filter === 'active') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.InProgress);
+    if (props.filter === 'completed') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed);
 
     return (
         <div>
@@ -79,7 +80,7 @@ export const Todolist = React.memo((props: PropsType) => {
                                 key={t.id}
                                 id={t.id}
                                 title={t.title}
-                                isDone={t.isDone}
+                                status={t.status}
                                 removeTask={removeTask}
                                 changeTaskStatus={changeTaskStatus}
                                 changeTaskTitle={changeTaskTitle}

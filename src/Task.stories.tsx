@@ -1,6 +1,7 @@
 import {Task} from './Task';
 import {action} from '@storybook/addon-actions';
 import React from 'react';
+import {TaskStatuses} from './api/todolists-api';
 
 export default {
     title: 'Task component',
@@ -17,7 +18,7 @@ export const TaskBaseExample = (props: any) => {
             <Task
                 id={'1'}
                 title={'HTML5'}
-                isDone={true}
+                status={TaskStatuses.Completed}
                 removeTask={removeTaskCallback}
                 changeTaskStatus={changeTaskStatusCallback}
                 changeTaskTitle={()=>{}}
@@ -25,7 +26,7 @@ export const TaskBaseExample = (props: any) => {
             <Task
                 id={'2'}
                 title={'SCSS'}
-                isDone={false}
+                status={TaskStatuses.InProgress}
                 removeTask={removeTaskCallback}
                 changeTaskStatus={changeTaskStatusCallback}
                 changeTaskTitle={changeTaskTitleCallback}

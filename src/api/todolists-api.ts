@@ -14,16 +14,11 @@ export type TodolistType = {
     addedDate: string
     order: number
 };
-type ResponseType<D = {}> = {
-    resultCode: number
-    messages: string[]
-    data: D
-};
-export type TaskEntityType = {
+export type TaskType = {
     description: string
     title: string
-    status: number
-    priority: number
+    status: TaskStatuses
+    priority: TaskPriorities
     startDate: string
     deadline: string
     id: string
@@ -31,20 +26,37 @@ export type TaskEntityType = {
     order: number
     addedDate: string
 };
-type GetTasksResponseType = {
-    error: string | null
-    totalCount: number
-    items: TaskEntityType[]
-};
-
-export type UpdateTaskModelType = {
+export enum TaskStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
+}
+export enum TaskPriorities {
+    Low = 0,
+    Middle = 1,
+    High = 2,
+    Urgent = 3,
+    Later = 4
+}
+type UpdateTaskModelType = {
     title: string
     description: string
     status: number
     priority: number
     startDate: string
     deadline: string
-}
+};
+type GetTasksResponseType = {
+    error: string | null
+    totalCount: number
+    items: TaskType[]
+};
+type ResponseType<D = {}> = {
+    resultCode: number
+    messages: string[]
+    data: D
+};
 
 export const todolistsAPI = {
     getTodolists() {
@@ -63,12 +75,13 @@ export const todolistsAPI = {
         return instance.get<GetTasksResponseType>(`/todo-lists/${todolistId}/tasks`);
     },
     createTask(todolistId: string, title: string) {
-        return instance.post<ResponseType<TaskEntityType>>(`/todo-lists/${todolistId}/tasks`, {title: title});
+        return instance.post<ResponseType<TaskType>>(`/todo-lists/${todolistId}/tasks`, {title: title});
     },
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`);
     },
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
-        return instance.put<ResponseType<{ item: TaskEntityType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model);
+        return instance.put<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model);
     }
 };
+
