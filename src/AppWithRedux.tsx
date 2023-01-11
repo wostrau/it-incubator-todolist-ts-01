@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {Todolist} from './Todolist';
 import {AddItemForm} from './AddItemForm';
@@ -9,8 +9,9 @@ import {
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
+    fetchTodolistsTC,
     FilterValuesType,
-    TodolistDomainType
+    TodolistDomainType, SetTodolistsActionType,
 } from './state/todolists-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
@@ -21,9 +22,12 @@ export type TasksStateType = {
 }
 
 function AppWithRedux() {
-    const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists);
-
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchTodolistsTC());
+    }, []);
+
     const addTodolist = useCallback((title: string) => {
         dispatch(addTodolistAC(title));
     }, [dispatch]);
@@ -36,6 +40,8 @@ function AppWithRedux() {
     const removeTodolist = useCallback((todolistId: string) => {
         dispatch(removeTodolistAC(todolistId));
     }, [dispatch]);
+
+    const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists);
 
     return (
         <div className="App">

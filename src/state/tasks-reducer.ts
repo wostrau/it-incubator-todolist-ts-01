@@ -1,7 +1,8 @@
 import {TasksStateType} from '../AppWithRedux';
 import {v1} from 'uuid';
-import {AddTodolistActionType, RemoveTodolistActionType} from './todolists-reducer';
-import {TaskPriorities, TaskStatuses} from '../api/todolists-api';
+import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer';
+import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI} from '../api/todolists-api';
+import {Dispatch} from 'redux';
 
 // initial state
 const initialState: TasksStateType = {};
@@ -60,6 +61,18 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             delete stateCopy[action.id];
             return stateCopy;
         }
+        case 'SET-TODOLISTS': {
+            const stateCopy = {...state};
+            action.todolists.forEach(tl => {
+                stateCopy[tl.id] = [];
+            });
+            return stateCopy;
+        }
+        case 'SET-TASKS': {
+            const stateCopy = {...state};
+            stateCopy[action.todolistId] = action.tasks;
+            return stateCopy;
+        }
         default:
             return state;
     }
@@ -77,6 +90,19 @@ export const changeTaskTitleAC = (todolistId: string, taskId: string, title: str
 };
 export const changeTaskStatusAC = (todolistId: string, taskId: string, status: TaskStatuses): ChangeTaskStatusActionType => {
     return {type: 'CHANGE-TASK-STATUS', todolistId: todolistId, taskId: taskId, status: status};
+};
+export const setTasksAC = (todolistId: string, tasks: TaskType[]): SetTasksActionType => {
+    return {type: 'SET-TASKS', todolistId: todolistId, tasks: tasks};
+};
+
+// thunk creators
+export const fetchTasksTC = (todolistId: string) => {
+    return (dispatch: Dispatch) => {
+        todolistsAPI.getTasks(todolistId)
+            .then((res) => {
+                dispatch(setTasksAC(todolistId, res.data.items))
+            });
+    };
 };
 
 // types
@@ -102,10 +128,17 @@ export type ChangeTaskStatusActionType = {
     taskId: string
     status: TaskStatuses
 };
+export type SetTasksActionType = {
+    type: 'SET-TASKS'
+    todolistId: string
+    tasks: TaskType[]
+}
 type ActionsType =
     | RemoveTaskActionType
     | AddTaskActionType
     | ChangeTaskTitleActionType
     | ChangeTaskStatusActionType
     | RemoveTodolistActionType
-    | AddTodolistActionType;
+    | AddTodolistActionType
+    | SetTodolistsActionType
+    | SetTasksActionType;

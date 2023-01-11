@@ -1,4 +1,4 @@
-import React, {MouseEventHandler, useCallback} from 'react';
+import React, {MouseEventHandler, useCallback, useEffect} from 'react';
 import './App.css';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
@@ -6,7 +6,7 @@ import {Button, IconButton} from '@mui/material';
 import {Delete} from '@mui/icons-material';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, fetchTasksTC, removeTaskAC} from './state/tasks-reducer';
 import {Task} from './Task';
 import {TaskStatuses, TaskType} from './api/todolists-api';
 import {FilterValuesType} from './state/todolists-reducer';
@@ -22,6 +22,11 @@ type PropsType = {
 
 export const Todolist = React.memo((props: PropsType) => {
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+       dispatch(fetchTasksTC(props.id));
+    }, []);
+
     const addTask = useCallback((title: string) => {
         dispatch(addTaskAC(props.id, title))
     }, [dispatch, props.id]);

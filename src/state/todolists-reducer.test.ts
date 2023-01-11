@@ -6,7 +6,7 @@ import {
     removeTodolistAC,
     todolistsReducer,
     FilterValuesType,
-    TodolistDomainType
+    TodolistDomainType, setTodolistsAC
 } from './todolists-reducer';
 
 let startState: TodolistDomainType[] = [];
@@ -19,24 +19,34 @@ beforeEach(() => {
 
 test('correct todolist should be removed', () => {
     const endState = todolistsReducer(startState, removeTodolistAC(startState[0].id));
+
     expect(endState.length).toBe(1);
     expect(endState[0].id).toBe(startState[1].id);
 });
 test('correct todolist should be added correctly', () => {
     const newTitle = 'What to do';
     const endState = todolistsReducer(startState, addTodolistAC(newTitle));
+
     expect(endState.length).toBe(3);
     expect(endState[0].title).toBe(newTitle);
 });
 test('correct todolist title should be changed', () => {
     const newTitle = 'What to do';
     const endState = todolistsReducer(startState, changeTodolistTitleAC(startState[0].id, newTitle));
+
     expect(endState[0].title).toBe(newTitle);
     expect(endState[1].title).toBe(startState[1].title);
 });
-test('correct filter of todolist should be changed', () => {
+test('todolists should be set to the state correctly', () => {
     const newFilter: FilterValuesType = 'completed';
     const endState = todolistsReducer(startState, changeTodolistFilterAC(startState[0].id, newFilter));
+
     expect(endState[0].filter).toBe(newFilter);
     expect(endState[1].filter).toBe(startState[1].filter);
+});
+test('',()=>{
+    const action = setTodolistsAC(startState);
+    const endState = todolistsReducer([], action);
+
+    expect(endState.length).toBe(2);
 });
