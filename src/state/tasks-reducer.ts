@@ -2,13 +2,13 @@ import {TasksStateType} from '../AppWithRedux';
 import {v1} from 'uuid';
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI} from '../api/todolists-api';
-import {Dispatch} from 'redux';
+import {AppThunk} from './store';
 
 // initial state
 const initialState: TasksStateType = {};
 
 // reducer
-export const tasksReducer = (state: TasksStateType = initialState, action: ActionsType): TasksStateType => {
+export const tasksReducer = (state: TasksStateType = initialState, action: TasksActionsType): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK': {
             const stateCopy = {...state};
@@ -96,13 +96,11 @@ export const setTasksAC = (todolistId: string, tasks: TaskType[]): SetTasksActio
 };
 
 // thunk creators
-export const fetchTasksTC = (todolistId: string) => {
-    return (dispatch: Dispatch) => {
-        todolistsAPI.getTasks(todolistId)
-            .then((res) => {
-                dispatch(setTasksAC(todolistId, res.data.items))
-            });
-    };
+export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
+    todolistsAPI.getTasks(todolistId)
+        .then((res) => {
+            dispatch(setTasksAC(todolistId, res.data.items))
+        });
 };
 
 // types
@@ -133,7 +131,7 @@ export type SetTasksActionType = {
     todolistId: string
     tasks: TaskType[]
 }
-type ActionsType =
+export type TasksActionsType =
     | RemoveTaskActionType
     | AddTaskActionType
     | ChangeTaskTitleActionType

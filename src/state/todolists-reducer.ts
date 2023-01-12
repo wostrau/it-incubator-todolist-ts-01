@@ -1,12 +1,12 @@
-import { Dispatch } from 'redux';
 import {v1} from 'uuid';
 import {todolistsAPI, TodolistType} from '../api/todolists-api';
+import {AppThunk} from './store';
 
 // initial state
 const initialSate: TodolistDomainType[] = [];
 
 // reducer
-export const todolistsReducer = (state: TodolistDomainType[] = initialSate, action: ActionsType): TodolistDomainType[] => {
+export const todolistsReducer = (state: TodolistDomainType[] = initialSate, action: TodolistsActionsType): TodolistDomainType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.id);
@@ -54,13 +54,11 @@ export const setTodolistsAC = (todolists: TodolistType[]): SetTodolistsActionTyp
 };
 
 // thunk creators
-export const fetchTodolistsTC = () => {
-    return (dispatch: Dispatch) => {
-        todolistsAPI.getTodolists()
-            .then((res) => {
-                dispatch(setTodolistsAC(res.data))
-            });
-    };
+export const fetchTodolistsTC = (): AppThunk => dispatch => {
+    todolistsAPI.getTodolists()
+        .then((res) => {
+            dispatch(setTodolistsAC(res.data))
+        });
 };
 
 // types
@@ -87,7 +85,7 @@ export type SetTodolistsActionType = {
     type: 'SET-TODOLISTS'
     todolists: TodolistType[]
 };
-type ActionsType =
+export type TodolistsActionsType =
     | RemoveTodolistActionType
     | AddTodolistActionType
     | ChangeTodolistTitleActionType
