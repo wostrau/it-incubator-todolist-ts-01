@@ -1,13 +1,6 @@
 import {v1} from 'uuid';
 import {TasksStateType} from '../AppWithRedux';
-import {
-    addTaskAC,
-    changeTaskStatusAC,
-    changeTaskTitleAC,
-    removeTaskAC,
-    setTasksAC,
-    tasksReducer
-} from './tasks-reducer';
+import {addTaskAC, removeTaskAC, setTasksAC, tasksReducer, updateTaskAC} from './tasks-reducer';
 import {addTodolistAC, removeTodolistAC, setTodolistsAC} from './todolists-reducer';
 import {TaskPriorities, TaskStatuses} from '../api/todolists-api';
 
@@ -104,17 +97,28 @@ test('correct task should be removed from correct array', () => {
     expect(endState['todolistId1'].every(t => t.id !== startState['todolistId1'][0].id)).toBeTruthy();
 });
 test('correct task should be added to correct array', () => {
-    const action = addTaskAC('todolistId1', 'REDUX');
+    const action = addTaskAC({
+            id: v1(),
+            title: 'ANGULAR',
+            status: TaskStatuses.InProgress,
+            order: 0,
+            description: '',
+            startDate: '',
+            addedDate: '',
+            priority: TaskPriorities.Middle,
+            deadline: '',
+            todoListId: 'todolistId1'
+        });
     const endState = tasksReducer(startState, action);
 
     expect(endState['todolistId2'].length).toBe(3);
     expect(endState['todolistId1'].length).toBe(4);
-    expect(endState['todolistId1'][0].title).toBe('REDUX');
+    expect(endState['todolistId1'][0].title).toBe('ANGULAR');
     expect(endState['todolistId1'][0].id).toBeDefined();
     expect(endState['todolistId1'][0].status).toBe(TaskStatuses.InProgress);
 });
 test('correct task title should be changed in correct array', () => {
-    const action = changeTaskTitleAC('todolistId1', startState['todolistId1'][0].id, 'REDUX');
+    const action = updateTaskAC('todolistId1', startState['todolistId1'][0].id, {title: 'REDUX'});
     const endState = tasksReducer(startState, action);
 
     expect(endState['todolistId1'].length).toBe(3);
@@ -122,7 +126,7 @@ test('correct task title should be changed in correct array', () => {
     expect(endState['todolistId2'][0].title).toBe('Monitor');
 });
 test('correct task status should be changed in correct array', () => {
-    const action = changeTaskStatusAC('todolistId1', startState['todolistId1'][0].id, TaskStatuses.InProgress);
+    const action = updateTaskAC('todolistId1', startState['todolistId1'][0].id, {status: TaskStatuses.InProgress});
     const endState = tasksReducer(startState, action);
 
     expect(endState['todolistId1'][0].status).toBe(TaskStatuses.InProgress);
@@ -130,7 +134,8 @@ test('correct task status should be changed in correct array', () => {
     expect(endState['todolistId2'][0].status).toBe(TaskStatuses.InProgress);
 });
 test('new property with new array for tasks should be added when new todolist is added', () => {
-    const action = addTodolistAC('NEW todolist');
+    const newTodolist = {id: v1(), title: 'What to do', filter: 'all', order: 0, addedDate: ''};
+    const action = addTodolistAC(newTodolist);
     const endState = tasksReducer(startState, action);
 
     const keys = Object.keys(endState);

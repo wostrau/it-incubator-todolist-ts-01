@@ -4,7 +4,7 @@ import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {Button, IconButton} from '@mui/material';
 import {Delete} from '@mui/icons-material';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, fetchTasksTC, removeTaskAC} from './state/tasks-reducer';
+import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from './state/tasks-reducer';
 import {Task} from './Task';
 import {TaskStatuses} from './api/todolists-api';
 import {FilterValuesType} from './state/todolists-reducer';
@@ -22,26 +22,26 @@ type PropsType = {
 export const Todolist = React.memo((props: PropsType) => {
     const dispatch = useAppDispatch();
 
-    useEffect(()=>{
-       dispatch(fetchTasksTC(props.id));
+    useEffect(() => {
+        dispatch(fetchTasksTC(props.id));
     }, [dispatch, props.id]);
 
     const addTask = useCallback((title: string) => {
-        dispatch(addTaskAC(props.id, title))
+        dispatch(addTaskTC(props.id, title))
     }, [dispatch, props.id]);
     const removeTask = useCallback((taskId: string) => {
-        dispatch(removeTaskAC(props.id, taskId))
+        dispatch(removeTaskTC(props.id, taskId));
     }, [dispatch, props.id]);
     const changeTaskStatus = useCallback((taskId: string, status: TaskStatuses) => {
-        dispatch(changeTaskStatusAC(props.id, taskId, status))
+        dispatch(updateTaskTC(props.id, taskId, {status: status}))
     }, [dispatch, props.id]);
     const changeTaskTitle = useCallback((taskId: string, newTitle: string) => {
-        dispatch(changeTaskTitleAC(props.id, taskId, newTitle));
+        dispatch(updateTaskTC(props.id, taskId, {title: newTitle}));
     }, [dispatch, props.id]);
+
     const onAllClickHandler = useCallback(() => {
         props.changeFilter('all', props.id)
     }, [props]);
-
     const onActiveClickHandler = useCallback(() => {
         props.changeFilter('active', props.id)
     }, [props]);
