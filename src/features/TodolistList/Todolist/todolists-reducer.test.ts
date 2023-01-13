@@ -3,10 +3,11 @@ import {
     addTodolistAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC,
-    removeTodolistAC,
-    todolistsReducer,
     FilterValuesType,
-    TodolistDomainType, setTodolistsAC
+    removeTodolistAC,
+    setTodolistsAC,
+    TodolistDomainType,
+    todolistsReducer
 } from './todolists-reducer';
 
 let startState: TodolistDomainType[] = [];

@@ -1,14 +1,15 @@
 import React, {MouseEventHandler, useCallback, useEffect} from 'react';
-import '../../app/App.css';
-import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
-import {EditableSpan} from '../../components/EditableSpan/EditableSpan';
+import '../../../app/App.css';
+import {AddItemForm} from '../../../components/AddItemForm/AddItemForm';
+import {EditableSpan} from '../../../components/EditableSpan/EditableSpan';
 import {Button, IconButton} from '@mui/material';
 import {Delete} from '@mui/icons-material';
 import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from './Task/tasks-reducer';
 import {Task} from './Task/Task';
-import {TaskStatuses} from '../../api/todolists-api';
+import {TaskStatuses} from '../../../api/todolists-api';
 import {FilterValuesType} from './todolists-reducer';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+
 
 type PropsType = {
     id: string

@@ -1,8 +1,7 @@
 import {v1} from 'uuid';
-import {TasksStateType} from '../../../app/App';
-import {addTaskAC, removeTaskAC, setTasksAC, tasksReducer, updateTaskAC} from './tasks-reducer';
+import {addTaskAC, removeTaskAC, setTasksAC, tasksReducer, TasksStateType, updateTaskAC} from './tasks-reducer';
 import {addTodolistAC, removeTodolistAC, setTodolistsAC} from '../todolists-reducer';
-import {TaskPriorities, TaskStatuses} from '../../../api/todolists-api';
+import {TaskPriorities, TaskStatuses} from '../../../../api/todolists-api';
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -98,17 +97,17 @@ test('correct task should be removed from correct array', () => {
 });
 test('correct task should be added to correct array', () => {
     const action = addTaskAC({
-            id: v1(),
-            title: 'ANGULAR',
-            status: TaskStatuses.InProgress,
-            order: 0,
-            description: '',
-            startDate: '',
-            addedDate: '',
-            priority: TaskPriorities.Middle,
-            deadline: '',
-            todoListId: 'todolistId1'
-        });
+        id: v1(),
+        title: 'ANGULAR',
+        status: TaskStatuses.InProgress,
+        order: 0,
+        description: '',
+        startDate: '',
+        addedDate: '',
+        priority: TaskPriorities.Middle,
+        deadline: '',
+        todoListId: 'todolistId1'
+    });
     const endState = tasksReducer(startState, action);
 
     expect(endState['todolistId2'].length).toBe(3);

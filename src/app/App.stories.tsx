@@ -1,7 +1,7 @@
 import {action} from '@storybook/addon-actions';
 import React from 'react';
-import App from '../app/App';
-import {ReduxStoreProviderDecorator} from './ReduxStoreProviderDecorator';
+import {App} from './App';
+import {ReduxStoreProviderDecorator} from '../stories/ReduxStoreProviderDecorator';
 
 export default {
     title: 'App component',
@@ -11,6 +11,6 @@ export default {
 
 const onChangeTitleCallback = action('Title changed');
 
-export const AppWithReduxBaseExample = (props: any) => {
+export const AppBaseExample = (props: any) => {
     return <App/>
 };
