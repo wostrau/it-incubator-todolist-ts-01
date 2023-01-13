@@ -1,9 +1,9 @@
 import React, {ChangeEvent, useCallback} from 'react';
-import './App.css';
-import {EditableSpan} from './EditableSpan';
+import '../../../app/App.css';
+import {EditableSpan} from '../../../components/EditableSpan/EditableSpan';
 import {Checkbox, IconButton} from '@mui/material';
 import {Delete} from '@mui/icons-material';
-import {TaskStatuses} from './api/todolists-api';
+import {TaskStatuses} from '../../../api/todolists-api';
 
 type PropsType = {
     id: string

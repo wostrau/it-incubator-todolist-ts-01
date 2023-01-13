@@ -1,7 +1,7 @@
-import {TasksStateType} from '../AppWithRedux';
-import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer';
-import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../api/todolists-api';
-import {AppDispatch, AppRootStateType, AppThunk} from './store';
+import {TasksStateType} from '../../../app/App';
+import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from '../todolists-reducer';
+import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../../api/todolists-api';
+import {AppDispatch, AppRootStateType, AppThunk} from '../../../app/store';
 
 // initial state
 const initialState: TasksStateType = {};
