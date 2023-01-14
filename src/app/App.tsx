@@ -4,9 +4,12 @@ import {AppBar, Button, IconButton, LinearProgress, Toolbar, Typography} from '@
 import {Menu} from '@mui/icons-material';
 import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
 import {TodolistList} from '../features/TodolistList/TodolistList';
+import {useAppSelector} from './hooks';
 
 
 export const App = () => {
+    const status = useAppSelector(state => state.app.status);
+
     return (
         <div className="App">
             <ErrorSnackbar/>
@@ -22,7 +25,7 @@ export const App = () => {
                     <Typography variant={'h6'}>News</Typography>
                     <Button color={'inherit'}>Login</Button>
                 </Toolbar>
-                <LinearProgress/>
+                {status === 'loading' && <LinearProgress/>}
             </AppBar>
             <TodolistList/>
         </div>

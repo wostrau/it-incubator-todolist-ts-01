@@ -1,6 +1,7 @@
 import {addTodolistActionType, removeTodolistActionType, setTodolistsActionType} from '../todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../../../api/todolists-api';
 import {AppDispatch, AppRootStateType, AppThunk} from '../../../../app/store';
+import {setErrorAC, setStatusAC} from '../../../../app/app-reducer';
 
 // initial state
 const initialState: TasksStateType = {};
@@ -59,15 +60,31 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateDo
 
 // thunk creators
 export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
+    dispatch(setStatusAC('loading'));
     todolistsAPI.getTasks(todolistId)
-        .then(r => dispatch(setTasksAC(todolistId, r.data.items)));
+        .then(r => {
+            dispatch(setTasksAC(todolistId, r.data.items));
+            dispatch(setStatusAC('succeeded'));
+        });
 };
 export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => dispatch => {
     todolistsAPI.deleteTask(todolistId, taskId)
         .then(r => dispatch(removeTaskAC(todolistId, taskId)));
 };
 export const addTaskTC = (todolistId: string, title: string): AppThunk => dispatch => {
-    todolistsAPI.createTask(todolistId, title).then(r => dispatch(addTaskAC(r.data.data.item)));
+    dispatch(setStatusAC('loading'));
+    todolistsAPI.createTask(todolistId, title)
+        .then(r => {
+            if (r.data.resultCode === 0) {
+                dispatch(addTaskAC(r.data.data.item));
+                dispatch(setStatusAC('succeeded'));
+            } else {
+                if (r.data.messages.length) {
+                    dispatch(setErrorAC(r.data.messages[0]));
+                } else dispatch(setErrorAC('some error'));
+                dispatch(setStatusAC('failed'));
+            }
+        });
 };
 export const updateTaskTC = (todolistId: string, taskId: string, domainModel: UpdateDomainTaskModelType): AppThunk => {
     return (dispatch: AppDispatch, getState: () => AppRootStateType) => {

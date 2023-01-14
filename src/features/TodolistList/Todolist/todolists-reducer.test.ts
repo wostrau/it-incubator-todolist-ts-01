@@ -13,8 +13,22 @@ import {
 let startState: TodolistDomainType[] = [];
 beforeEach(() => {
     startState = [
-        {id: v1(), title: 'What to learn', filter: 'all', order: 0, addedDate: ''},
-        {id: v1(), title: 'What to buy', filter: 'all', order: 0, addedDate: ''}
+        {
+            id: v1(),
+            title: 'What to learn',
+            filter: 'all',
+            order: 0,
+            addedDate: '',
+            entityStatus: 'idle'
+        },
+        {
+            id: v1(),
+            title: 'What to buy',
+            filter: 'all',
+            order: 0,
+            addedDate: '',
+            entityStatus: 'idle'
+        }
     ];
 })
 

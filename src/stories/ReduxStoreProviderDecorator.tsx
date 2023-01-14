@@ -5,10 +5,12 @@ import {todolistsReducer} from '../features/TodolistList/Todolist/todolists-redu
 import {tasksReducer} from '../features/TodolistList/Todolist/Task/tasks-reducer';
 import {v1} from 'uuid';
 import {TaskPriorities, TaskStatuses} from '../api/todolists-api';
+import {appReducer} from '../app/app-reducer';
 
 const rootReducer = combineReducers({
     todolists: todolistsReducer,
-    tasks: tasksReducer
+    tasks: tasksReducer,
+    app: appReducer
 });
 
 const initialStore: AppRootStateType = {
@@ -18,14 +20,16 @@ const initialStore: AppRootStateType = {
             title: 'What to learn',
             filter: 'all',
             addedDate: '',
-            order: 0
+            order: 0,
+            entityStatus: 'idle'
         },
         {
             id: 'todolistId2',
             title: 'What to buy',
             filter: 'all',
             addedDate: '',
-            order: 0
+            order: 0,
+            entityStatus: 'idle'
         }
     ],
     tasks: {
@@ -104,6 +108,10 @@ const initialStore: AppRootStateType = {
                 todoListId: 'todolistId2'
             }
         ]
+    },
+    app: {
+        status: 'idle',
+        error: null
     }
 }
 
