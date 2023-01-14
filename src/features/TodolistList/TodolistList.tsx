@@ -12,11 +12,16 @@ import {
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
 
-export const TodolistList = () => {
+type PropsType = {
+    demo?: boolean
+}
+
+export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
     const todolists = useAppSelector(state => state.todolists);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
+        if (demo) return;
         dispatch(fetchTodolistsTC());
     }, [dispatch]);
 
@@ -48,9 +53,8 @@ export const TodolistList = () => {
                         <Grid item key={tl.id}>
                             <Paper style={{padding: '10px'}}>
                                 <Todolist
-                                    id={tl.id}
-                                    title={tl.title}
-                                    filter={tl.filter}
+                                    demo={demo}
+                                    todolist={tl}
                                     changeFilter={changeTodolistFilter}
                                     removeTodolist={removeTodolist}
                                     changeTodolistTitle={changeTodolistTitle}

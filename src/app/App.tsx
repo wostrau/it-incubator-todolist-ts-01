@@ -6,8 +6,11 @@ import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
 import {TodolistList} from '../features/TodolistList/TodolistList';
 import {useAppSelector} from './hooks';
 
+type PropsType = {
+    demo?: boolean
+}
 
-export const App = () => {
+export const App = ({demo = false}: PropsType) => {
     const status = useAppSelector(state => state.app.status);
 
     return (
@@ -27,7 +30,7 @@ export const App = () => {
                 </Toolbar>
                 {status === 'loading' && <LinearProgress/>}
             </AppBar>
-            <TodolistList/>
+            <TodolistList demo={demo}/>
         </div>
     );
 };

@@ -4,11 +4,10 @@ import {ControlPoint} from '@mui/icons-material';
 
 type PropsType = {
     addItem: (title: string) => void
+    disabled?: boolean
 };
 
-export const AddItemForm = React.memo((props: PropsType) => {
-    console.log('add item form was called');
-
+export const AddItemForm = React.memo(({addItem, disabled = false}: PropsType) => {
     const [title, setTitle] = useState('');
     const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +18,7 @@ export const AddItemForm = React.memo((props: PropsType) => {
         if (error !== null) setError(null);
         if (event.key === 'Enter') {
             if (title.trim() !== '') {
-                props.addItem(title.trim());
+                addItem(title.trim());
                 setTitle('');
             } else setError('Title is required');
         }
@@ -27,7 +26,7 @@ export const AddItemForm = React.memo((props: PropsType) => {
     const onClickHandler = () => {
         if (error !== null) setError(null);
         if (title.trim() !== '') {
-            props.addItem(title.trim());
+            addItem(title.trim());
             setTitle('');
         } else setError('Title is required');
     };
@@ -42,10 +41,12 @@ export const AddItemForm = React.memo((props: PropsType) => {
                 onKeyDown={onKeyDownHandler}
                 error={!!error}
                 helperText={error}
+                disabled={disabled}
             />
             <IconButton
                 color={'primary'}
                 onClick={onClickHandler}
+                disabled={disabled}
             >
                 <ControlPoint/>
             </IconButton>
