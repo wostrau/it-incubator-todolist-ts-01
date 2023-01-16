@@ -23,7 +23,7 @@ export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
     useEffect(() => {
         if (demo) return;
         dispatch(fetchTodolistsTC());
-    }, [dispatch]);
+    }, [dispatch, demo]);
 
     const addTodolist = useCallback((title: string) => {
         dispatch(addTodolistTC(title));

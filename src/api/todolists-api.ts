@@ -77,14 +77,14 @@ export type UpdateTaskModelType = {
     startDate: string
     deadline: string
 };
+export type ResponseType<D = {}> = {
+    resultCode: number
+    messages: string[]
+    data: D
+};
 type GetTasksResponseType = {
     error: string | null
     totalCount: number
     items: TaskType[]
-};
-type ResponseType<D = {}> = {
-    resultCode: number
-    messages: string[]
-    data: D
 };
 

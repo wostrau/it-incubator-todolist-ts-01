@@ -2,6 +2,7 @@ import {addTodolistActionType, removeTodolistActionType, setTodolistsActionType}
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../../../api/todolists-api';
 import {AppDispatch, AppRootStateType, AppThunk} from '../../../../app/store';
 import {setAppErrorAC, setAppStatusAC} from '../../../../app/app-reducer';
+import {handleServerAppError, handleServerNetworkError} from '../../../../utilities/error-utilities';
 
 // initial state
 const initialState: TasksStateType = {};
@@ -65,11 +66,13 @@ export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
         .then(r => {
             dispatch(setTasksAC(todolistId, r.data.items));
             dispatch(setAppStatusAC('succeeded'));
-        });
+        })
+        .catch(error => handleServerNetworkError(error, dispatch));
 };
 export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => dispatch => {
     todolistsAPI.deleteTask(todolistId, taskId)
-        .then(r => dispatch(removeTaskAC(todolistId, taskId)));
+        .then(r => dispatch(removeTaskAC(todolistId, taskId)))
+        .catch(error => handleServerNetworkError(error, dispatch));
 };
 export const addTaskTC = (todolistId: string, title: string): AppThunk => dispatch => {
     dispatch(setAppStatusAC('loading'));
@@ -78,13 +81,9 @@ export const addTaskTC = (todolistId: string, title: string): AppThunk => dispat
             if (r.data.resultCode === 0) {
                 dispatch(addTaskAC(r.data.data.item));
                 dispatch(setAppStatusAC('succeeded'));
-            } else {
-                if (r.data.messages.length) {
-                    dispatch(setAppErrorAC(r.data.messages[0]));
-                } else dispatch(setAppErrorAC('some error'));
-                dispatch(setAppStatusAC('failed'));
-            }
-        });
+            } else handleServerAppError(r.data, dispatch);
+        })
+        .catch(error => handleServerNetworkError(error, dispatch));
 };
 export const updateTaskTC = (todolistId: string, taskId: string, domainModel: UpdateDomainTaskModelType): AppThunk => {
     return (dispatch: AppDispatch, getState: () => AppRootStateType) => {
@@ -104,7 +103,12 @@ export const updateTaskTC = (todolistId: string, taskId: string, domainModel: Up
             ...domainModel
         };
         todolistsAPI.updateTask(todolistId, taskId, apiModel)
-            .then(r => dispatch(updateTaskAC(todolistId, taskId, domainModel)));
+            .then(r => {
+                if (r.data.resultCode === 0) {
+                    dispatch(updateTaskAC(todolistId, taskId, domainModel))
+                } else handleServerAppError(r.data, dispatch);
+            })
+            .catch(error => handleServerNetworkError(error, dispatch));
     };
 };
 
