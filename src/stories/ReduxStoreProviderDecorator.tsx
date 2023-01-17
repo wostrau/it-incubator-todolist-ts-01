@@ -113,7 +113,8 @@ const initialStore: AppRootStateType = {
     app: {
         status: 'idle',
         error: null
-    }
+    },
+    login: {},
 }
 
 export const storyBookStore = createStore(rootReducer, initialStore as AppRootStateType, applyMiddleware(thunk));

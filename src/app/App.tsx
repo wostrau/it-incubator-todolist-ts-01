@@ -5,6 +5,8 @@ import {Menu} from '@mui/icons-material';
 import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
 import {TodolistList} from '../features/TodolistList/TodolistList';
 import {useAppSelector} from './hooks';
+import {Route, Routes} from 'react-router-dom';
+import {Login} from '../features/Login/Login';
 
 type PropsType = {
     demo?: boolean
@@ -30,7 +32,10 @@ export const App = ({demo = false}: PropsType) => {
                 </Toolbar>
                 {status === 'loading' && <LinearProgress/>}
             </AppBar>
-            <TodolistList demo={demo}/>
+            <Routes>
+                <Route path={'/'} element={<TodolistList demo={demo}/>}/>
+                <Route path={'/login'} element={<Login/>}/>
+            </Routes>
         </div>
     );
 };
