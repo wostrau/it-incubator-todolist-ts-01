@@ -4,7 +4,8 @@ let startState: AppInitialStateType;
 beforeEach(()=>{
     startState = {
         status: 'idle',
-        error: null
+        error: null,
+        isInitialized: false,
     }
 });
 

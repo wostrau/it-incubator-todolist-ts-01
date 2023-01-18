@@ -11,19 +11,23 @@ import {
 } from './Todolist/todolists-reducer';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
+import {useNavigate} from 'react-router-dom';
 
 type PropsType = {
     demo?: boolean
 }
 
 export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
     const todolists = useAppSelector(state => state.todolists);
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (demo) return;
+        if (!isLoggedIn) navigate('/login');
         dispatch(fetchTodolistsTC());
-    }, [dispatch, demo]);
+    }, [dispatch, demo, isLoggedIn, navigate]);
 
     const addTodolist = useCallback((title: string) => {
         dispatch(addTodolistTC(title));

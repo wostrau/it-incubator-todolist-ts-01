@@ -29,26 +29,19 @@ export const Login = () => {
 
     return (
         <Grid container={true} justifyContent={'center'}>
-            <Grid item xs={2}>
+            <Grid item xs={4}>
                 <form onSubmit={formik.handleSubmit}>
                     <FormControl>
                         <FormLabel>
-                            <p>
-                                To log in get registered <a
-                                href={'https://social-network.samuraijs.com/'}
-                                target={'_blank'}
-                                rel="noreferrer nofollow noopener"
-                            >here</a>
+                            <p>To log in get registered <a
+                                    href={'https://social-network.samuraijs.com/'}
+                                    target={'_blank'}
+                                    rel="noreferrer nofollow noopener"
+                                >here</a>
                             </p>
-                            <p>
-                                or use common test account credentials:
-                            </p>
-                            <p>
-                                Email: free@samuraijs.com
-                            </p>
-                            <p>
-                                Password: free
-                            </p>
+                            <p>or use common test account credentials:</p>
+                            <p>Email: free@samuraijs.com</p>
+                            <p>Password: free</p>
                         </FormLabel>
                         <FormGroup>
                             <TextField
