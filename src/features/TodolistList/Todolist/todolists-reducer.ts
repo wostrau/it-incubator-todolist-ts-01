@@ -1,6 +1,7 @@
 import {todolistsAPI, TodolistType} from '../../../api/todolists-api';
 import {AppThunk} from '../../../app/store';
 import {RequestStatusType, setAppErrorAC, setAppStatusAC} from '../../../app/app-reducer';
+import {handleServerNetworkError} from '../../../utilities/error-utilities';
 
 // initial state
 const initialSate: TodolistDomainType[] = [];
@@ -50,9 +51,10 @@ export const fetchTodolistsTC = (): AppThunk => dispatch => {
     dispatch(setAppStatusAC('loading'));
     todolistsAPI.getTodolists()
         .then(r => {
-            dispatch(setTodolistsAC(r.data));
-            dispatch(setAppStatusAC('succeeded'))
-        });
+                dispatch(setTodolistsAC(r.data));
+                dispatch(setAppStatusAC('succeeded'))
+            })
+        .catch(error => handleServerNetworkError(error, dispatch));
 };
 export const removeTodolistTC = (id: string): AppThunk => dispatch => {
     dispatch(setAppStatusAC('loading'));

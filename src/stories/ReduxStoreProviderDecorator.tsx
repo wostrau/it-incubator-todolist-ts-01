@@ -106,16 +106,18 @@ const initialStore: AppRootStateType = {
                 priority: TaskPriorities.Middle,
                 description: '',
                 deadline: '',
-                todoListId: 'todolistId2'
+                todoListId: 'todolistId2',
             }
         ]
     },
     app: {
         status: 'idle',
-        error: null
+        error: null,
     },
-    login: {},
-}
+    auth: {
+        isLoggedIn: false,
+    },
+};
 
 export const storyBookStore = createStore(rootReducer, initialStore as AppRootStateType, applyMiddleware(thunk));
 

@@ -4,22 +4,25 @@ import {AppThunk} from '../../app/store';
 import {handleServerAppError, handleServerNetworkError} from '../../utilities/error-utilities';
 
 // initial state
-const initialState: LoginStateType = {};
+const initialState: LoginStateType = {
+    isLoggedIn: false
+};
 
 // reducer
-export const loginReducer = (state: LoginStateType = initialState, action: LoginActionsType): LoginStateType => {
+export const authReducer = (state: LoginStateType = initialState, action: LoginActionsType): LoginStateType => {
     switch (action.type) {
+        case 'LOGIN/SET-IS-LOGGED-IN':
+            return {...state, isLoggedIn: action.isLoggedIn};
         default:
             return state;
     }
 };
 
 // action creators
-/*export const setTasksAC = (todolistId: string, tasks: TaskType[]) => ({
-    type: 'SET-TASKS',
-    todolistId: todolistId,
-    tasks: tasks
-} as const);*/
+export const setIsLoggedInAC = (isLoggedIn: boolean) => ({
+    type: 'LOGIN/SET-IS-LOGGED-IN',
+    isLoggedIn: isLoggedIn
+} as const);
 
 // thunk creators
 export const loginTC = (data: LoginParamsType): AppThunk => dispatch => {
@@ -27,7 +30,7 @@ export const loginTC = (data: LoginParamsType): AppThunk => dispatch => {
     authAPI.login(data)
         .then(r => {
             if (r.data.resultCode === 0) {
-                alert('YOU HAVE LOGGED IN')
+                dispatch(setIsLoggedInAC(true));
                 dispatch(setAppStatusAC('succeeded'));
             } else handleServerAppError(r.data, dispatch);
         })
@@ -35,5 +38,8 @@ export const loginTC = (data: LoginParamsType): AppThunk => dispatch => {
 };
 
 // types
-export type LoginActionsType = any;
-export type LoginStateType = {};
+export type LoginActionsType =
+    | ReturnType<typeof setIsLoggedInAC>;
+export type LoginStateType = {
+    isLoggedIn: boolean
+};

@@ -1,11 +1,14 @@
 import React from 'react';
 import {Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from '@mui/material';
 import {useFormik} from 'formik';
-import {useAppDispatch} from '../../app/hooks';
-import {loginTC} from './login-reducer';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {loginTC} from './auth-reducer';
+import {useNavigate} from 'react-router-dom';
 
 export const Login = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
 
     const formik = useFormik({
         initialValues: {
@@ -22,13 +25,30 @@ export const Login = () => {
         },
     });
 
+    if (isLoggedIn) navigate('/');
+
     return (
         <Grid container={true} justifyContent={'center'}>
             <Grid item xs={2}>
                 <form onSubmit={formik.handleSubmit}>
                     <FormControl>
                         <FormLabel>
-
+                            <p>
+                                To log in get registered <a
+                                href={'https://social-network.samuraijs.com/'}
+                                target={'_blank'}
+                                rel="noreferrer nofollow noopener"
+                            >here</a>
+                            </p>
+                            <p>
+                                or use common test account credentials:
+                            </p>
+                            <p>
+                                Email: free@samuraijs.com
+                            </p>
+                            <p>
+                                Password: free
+                            </p>
                         </FormLabel>
                         <FormGroup>
                             <TextField

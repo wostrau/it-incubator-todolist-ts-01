@@ -3,13 +3,13 @@ import thunk, {ThunkAction, ThunkDispatch} from 'redux-thunk';
 import {TodolistsActionsType, todolistsReducer} from '../features/TodolistList/Todolist/todolists-reducer';
 import {TasksActionsType, tasksReducer} from '../features/TodolistList/Todolist/Task/tasks-reducer';
 import {AppActionsType, appReducer} from './app-reducer';
-import {LoginActionsType, loginReducer} from '../features/Login/login-reducer';
+import {LoginActionsType, authReducer} from '../features/Login/auth-reducer';
 
 const rootReducer = combineReducers({
     todolists: todolistsReducer,
     tasks: tasksReducer,
     app: appReducer,
-    login: loginReducer
+    auth: authReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

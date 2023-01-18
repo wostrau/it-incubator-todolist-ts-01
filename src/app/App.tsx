@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {AppBar, Button, IconButton, LinearProgress, Toolbar, Typography} from '@mui/material';
+import {AppBar, Button, CircularProgress, IconButton, LinearProgress, Toolbar, Typography} from '@mui/material';
 import {Menu} from '@mui/icons-material';
 import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
 import {TodolistList} from '../features/TodolistList/TodolistList';
@@ -14,6 +14,15 @@ type PropsType = {
 
 export const App = ({demo = false}: PropsType) => {
     const status = useAppSelector(state => state.app.status);
+    const initialized = useAppSelector(state => state.app.);
+
+    if (!initialized) {
+        return (
+            <div style={{position: 'absolute', top: '30%', textAlign: 'center', width: '100%'}}>
+                <CircularProgress/>
+            </div>
+        );
+    }
 
     return (
         <div className="App">
