@@ -12,12 +12,28 @@ const slice = createSlice({
     name: 'todolists',
     initialState: initialState,
     reducers: {
-        setTodolistsAC(state, action: PayloadAction<{todolists: TodolistType[]}>) {},
-        removeTodolistAC(state, action: PayloadAction<{id: string}>) {},
-        addTodolistAC(state, action: PayloadAction<{ todolist: TodolistType }>) {},
-        changeTodolistTitleAC(state, action: PayloadAction<{id: string, title: string}>) {},
-        changeTodolistFilterAC(state, action: PayloadAction<{id: string, filter: FilterValuesType}>) {},
-        changeTodolistEntityStatusAC(state, action: PayloadAction<{id: string, status: RequestStatusType}>) {},
+        setTodolistsAC(state, action: PayloadAction<{todolists: TodolistType[]}>) {
+            return action.payload.todolists.map(tl => ({...tl, filter: 'all', entityStatus: 'idle'}));
+        },
+        removeTodolistAC(state, action: PayloadAction<{id: string}>) {
+            const index = state.findIndex(tl => tl.id === action.payload.id);
+            if (index > -1) state.splice(index, 1);
+        },
+        addTodolistAC(state, action: PayloadAction<{ todolist: TodolistType }>) {
+            state.unshift({...action.payload.todolist, filter: 'all', entityStatus: 'idle'});
+        },
+        changeTodolistTitleAC(state, action: PayloadAction<{id: string, title: string}>) {
+            const index = state.findIndex(tl => tl.id === action.payload.id);
+            state[index].title = action.payload.title;
+        },
+        changeTodolistFilterAC(state, action: PayloadAction<{id: string, filter: FilterValuesType}>) {
+            const index = state.findIndex(tl => tl.id === action.payload.id);
+            state[index].filter = action.payload.filter;
+        },
+        changeTodolistEntityStatusAC(state, action: PayloadAction<{id: string, status: RequestStatusType}>) {
+            const index = state.findIndex(tl => tl.id === action.payload.id);
+            state[index].entityStatus = action.payload.status;
+        },
     },
 });
 

@@ -1,4 +1,10 @@
-import {addTodolistActionType, removeTodolistActionType, setTodolistsActionType} from '../todolists-reducer';
+import {
+    addTodolistAC,
+    addTodolistActionType,
+    removeTodolistAC,
+    removeTodolistActionType, setTodolistsAC,
+    setTodolistsActionType
+} from '../todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../../../api/todolists-api';
 import {AppDispatch, AppRootStateType, AppThunk} from '../../../../app/store';
 import {setAppStatusAC} from '../../../../app/app-reducer';
@@ -8,7 +14,7 @@ import {handleServerAppError, handleServerNetworkError} from '../../../../utilit
 const initialState: TasksStateType = {};
 
 // reducer
-export const tasksReducer = (state: TasksStateType = initialState, action: TasksActionsType): TasksStateType => {
+export const tasksReducer = (state: TasksStateType = initialState, action: TasksActionsType | any): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK':
             return {...state, [action.todolistId]: state[action.todolistId].filter(t => t.id !== action.taskId)};
@@ -19,16 +25,16 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Tasks
                 ...state, [action.todolistId]: state[action.todolistId]
                     .map((t) => t.id === action.taskId ? {...t, ...action.model} : t)
             };
-        case 'ADD-TODOLIST':
+        case addTodolistAC.type:
             return {...state, [action.payload.todolist.id]: []};
-        case 'REMOVE-TODOLIST': {
+        case removeTodolistAC.type: {
             const stateCopy = {...state};
             delete stateCopy[action.payload.id];
             return stateCopy;
         }
-        case 'SET-TODOLISTS': {
+        case setTodolistsAC.type: {
             const stateCopy = {...state};
-            action.payload.todolists.forEach(tl => {
+            action.payload.todolists.forEach((tl: any) => {
                 stateCopy[tl.id] = [];
             });
             return stateCopy;

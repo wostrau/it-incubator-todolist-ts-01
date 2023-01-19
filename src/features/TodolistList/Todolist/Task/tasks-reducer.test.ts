@@ -134,7 +134,7 @@ test('correct task status should be changed in correct array', () => {
 });
 test('new property with new array for tasks should be added when new todolist is added', () => {
     const newTodolist = {id: v1(), title: 'What to do', filter: 'all', order: 0, addedDate: ''};
-    const action = addTodolistAC(newTodolist);
+    const action = addTodolistAC({todolist: newTodolist});
     const endState = tasksReducer(startState, action);
 
     const keys = Object.keys(endState);
@@ -145,7 +145,7 @@ test('new property with new array for tasks should be added when new todolist is
     expect(endState[newKey]).toStrictEqual([]);
 });
 test('property with todolistId should be deleted', () => {
-    const action = removeTodolistAC('todolistId2');
+    const action = removeTodolistAC({id: 'todolistId2'});
     const endState = tasksReducer(startState, action);
     const keys = Object.keys(endState);
 
@@ -153,10 +153,10 @@ test('property with todolistId should be deleted', () => {
     expect(endState['todolistId2']).toBeUndefined();
 });
 test('empty arrays for tasks should be added correctly while setting todolists', () => {
-    const action = setTodolistsAC([
+    const action = setTodolistsAC({todolists: [
         {id: '1', title: 'Todolist #1', order: 0, addedDate: ''},
         {id: '2', title: 'Todolist #2', order: 0, addedDate: ''}
-    ]);
+    ]});
     const endState = tasksReducer({}, action);
     const keys = Object.keys(endState);
 
