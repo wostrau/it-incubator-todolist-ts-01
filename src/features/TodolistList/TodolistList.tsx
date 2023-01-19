@@ -40,7 +40,7 @@ export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
     }, [dispatch]);
     // filter changes in REDUX / no server response with 'filter' property!
     const changeTodolistFilter = useCallback((value: FilterValuesType, todolistId: string) => {
-        dispatch(changeTodolistFilterAC(todolistId, value));
+        dispatch(changeTodolistFilterAC({id: todolistId, filter: value}));
     }, [dispatch]);
 
     return (

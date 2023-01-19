@@ -4,12 +4,12 @@ import {AppDispatch} from '../app/store';
 
 export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: AppDispatch) => {
     if (data.messages.length) {
-        dispatch(setAppErrorAC(data.messages[0]));
-    } else dispatch(setAppErrorAC('some error'));
-    dispatch(setAppStatusAC('failed'));
+        dispatch(setAppErrorAC({error: data.messages[0]}));
+    } else dispatch(setAppErrorAC({error: 'some error'}));
+    dispatch(setAppStatusAC({status: 'failed'}));
 };
 
 export const handleServerNetworkError = (error: { message: string }, dispatch: AppDispatch) => {
-    dispatch(setAppErrorAC(error.message ? error.message : 'some error'));
-    dispatch(setAppStatusAC('failed'));
+    dispatch(setAppErrorAC({error: error.message ? error.message : 'some error'}));
+    dispatch(setAppStatusAC({status: 'failed'}));
 };

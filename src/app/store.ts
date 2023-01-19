@@ -24,8 +24,3 @@ export type AppRootStateType = ReturnType<typeof store.getState>;
 export type AllActionsType = TodolistsActionsType | TasksActionsType | AppActionsType | LoginActionsType;
 export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AllActionsType>;
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AllActionsType>;
-
-// @ts-ignore
-window.store = store;
-
-
