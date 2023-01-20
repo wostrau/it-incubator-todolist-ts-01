@@ -1,16 +1,16 @@
 import {
     addTodolistAC,
-    addTodolistActionType,
-    removeTodolistAC,
-    removeTodolistActionType,
     setTodolistsAC,
-    setTodolistsActionType
+    removeTodolistAC,
+    addTodolistActionType,
+    setTodolistsActionType,
+    removeTodolistActionType
 } from '../todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../../../api/todolists-api';
 import {AppDispatch, AppRootStateType, AppThunk} from '../../../../app/store';
 import {setAppStatusAC} from '../../../../app/app-reducer';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utilities/error-utilities';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 // initial state
 const initialState = {} as TasksStateType;
@@ -111,8 +111,19 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateDo
     model: model
 } as const);*/
 
+// thunks created with redux-toolkit pattern
+export const fetchTasksTC = createAsyncThunk('tasks/fetchTasks', (todolistId: string, thunkAPI)=>{
+    thunkAPI.dispatch(setAppStatusAC({status: 'loading'}));
+    todolistsAPI.getTasks(todolistId)
+        .then(r => {
+            thunkAPI.dispatch(setTasksAC({todolistId: todolistId, tasks: r.data.items}));
+            thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}));
+        })
+        //.catch(error => handleServerNetworkError(error, thunkAPI.dispatch));
+});
+
 // thunk creators
-export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
+/*export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
     dispatch(setAppStatusAC({status: 'loading'}));
     todolistsAPI.getTasks(todolistId)
         .then(r => {
@@ -120,7 +131,7 @@ export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
             dispatch(setAppStatusAC({status: 'succeeded'}));
         })
         .catch(error => handleServerNetworkError(error, dispatch));
-};
+};*/
 export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => dispatch => {
     todolistsAPI.deleteTask(todolistId, taskId)
         .then(r => dispatch(removeTaskAC({todolistId: todolistId, taskId: taskId})))
