@@ -2950,7 +2950,7 @@
     prop-types "^15.7.2"
     regenerator-runtime "^0.13.7"
 
-"@storybook/addons@6.5.15":
+"@storybook/addons@6.5.15", "@storybook/addons@^6.5.9":
   version "6.5.15"
   resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-6.5.15.tgz#3c3fafbf3c9ce2182d652cb6682f6581ba6580e1"
   integrity sha512-xT31SuSX+kYGyxCNK2nqL7WTxucs3rSmhiCLovJcUjYk+QquV3c2c53Ki7lwwdDbzfXFcNAe0HJ4hoTN4jhn0Q==
@@ -3541,7 +3541,7 @@
     react-docgen-typescript "^2.1.1"
     tslib "^2.0.0"
 
-"@storybook/react@*", "@storybook/react@^6.5.15":
+"@storybook/react@*", "@storybook/react@^6.5.15", "@storybook/react@^6.5.9":
   version "6.5.15"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-6.5.15.tgz#83e645b16a4d241ec84a8d0015b1a7a2d55c5091"
   integrity sha512-iQta2xOs/oK0sw/zpn3g/huvOmvggzi8z2/WholmUmmRiSQRo9lOhRXH0u13T4ja4fEa+u7m58G83xOG6i73Kw==
@@ -4342,6 +4342,16 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
+
+"@types/storybook-react-router@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/storybook-react-router/-/storybook-react-router-1.0.2.tgz#7a8155cc91e897cc19cd42be199cc1d66e2281ce"
+  integrity sha512-TardjrV4N2Ltctz6pY7iYzKM/JS47Ieg7j2DhUp4ijeqiPfTlOyzRzA63XTXrzCaGpB9vcz9a8qu/JdSFo0p2g==
+  dependencies:
+    "@storybook/addons" "^6.5.9"
+    "@storybook/react" "^6.5.9"
+    "@types/react" "*"
+    "@types/react-router" "*"
 
 "@types/storybook__react@^5.2.1":
   version "5.2.1"
@@ -13670,7 +13680,7 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-inspector@^5.1.0:
+react-inspector@^5.1.0, react-inspector@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/react-inspector/-/react-inspector-5.1.1.tgz#58476c78fde05d5055646ed8ec02030af42953c8"
   integrity sha512-GURDaYzoLbW8pMGXwYPDBIv6nqei4kK7LPRZ9q9HCZF54wqXz/dnylBp/kfE9XmekBhHvLDdcYeyIwSrvtOiWg==
@@ -14923,6 +14933,20 @@ store2@^2.12.0:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
+
+storybook-addon-react-router-v6@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/storybook-addon-react-router-v6/-/storybook-addon-react-router-v6-0.2.1.tgz#19f1262be15377df0d2ae3bc880717b97121bb46"
+  integrity sha512-dwYLaE6/bsGnkTn1l5rb5SYIhv2xwwSeRkhWX86bihDWJjz/+NlWSN+r4Kp2WNMVN9vEhMleunXPiGJiFUn7Hg==
+  dependencies:
+    react-inspector "^5.1.1"
+
+storybook-react-router@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/storybook-react-router/-/storybook-react-router-1.0.8.tgz#8d174eba1c38fff2c7e459c3d0c2463bc0cd9c6a"
+  integrity sha512-3PvuTu6cJHtF72WC3aKdIrUY1eUYsdVYEmW74nZiJoLCn0C/6iDx73w94jgI6lXq75aEJsri+lEDyhcokfP6YA==
+  dependencies:
+    prop-types "^15.7.2"
 
 stream-browserify@^2.0.1:
   version "2.0.2"

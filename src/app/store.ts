@@ -20,7 +20,8 @@ export const store = configureStore({
 //export const store = createStore(rootReducer, applyMiddleware(thunk));
 
 // types
-export type AppRootStateType = ReturnType<typeof store.getState>;
+export type RootReducerType = typeof rootReducer;
+export type AppRootStateType = ReturnType<RootReducerType>;
 export type AllActionsType = TodolistsActionsType | TasksActionsType | AppActionsType | LoginActionsType;
 export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AllActionsType>;
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AllActionsType>;

@@ -2,11 +2,12 @@
 import React from 'react';
 import {App} from './App';
 import {ReduxStoreProviderDecorator} from '../stories/ReduxStoreProviderDecorator';
+import {withRouter} from 'storybook-addon-react-router-v6';
 
 export default {
     title: 'App component',
     component: App,
-    decorators: [ReduxStoreProviderDecorator]
+    decorators: [ReduxStoreProviderDecorator, withRouter]
 }
 
 //const onChangeTitleCallback = action('Title changed');

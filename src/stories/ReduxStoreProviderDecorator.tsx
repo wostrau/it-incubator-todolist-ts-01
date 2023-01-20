@@ -1,17 +1,20 @@
 import {Provider} from 'react-redux';
-import {AppRootStateType} from '../app/store';
-import {applyMiddleware, combineReducers, legacy_createStore as createStore} from 'redux';
+import {AppRootStateType, RootReducerType} from '../app/store';
+import {combineReducers} from 'redux';
 import {todolistsReducer} from '../features/TodolistList/Todolist/todolists-reducer';
 import {tasksReducer} from '../features/TodolistList/Todolist/Task/tasks-reducer';
 import {v1} from 'uuid';
 import {TaskPriorities, TaskStatuses} from '../api/todolists-api';
 import {appReducer} from '../app/app-reducer';
 import thunk from 'redux-thunk';
+import {authReducer} from '../features/Login/auth-reducer';
+import {configureStore} from '@reduxjs/toolkit';
 
-const rootReducer = combineReducers({
+const rootReducer: RootReducerType = combineReducers({
     todolists: todolistsReducer,
     tasks: tasksReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer,
 });
 
 const initialStore: AppRootStateType = {
@@ -30,7 +33,7 @@ const initialStore: AppRootStateType = {
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus: 'loading'
+            entityStatus: 'idle'
         }
     ],
     tasks: {
@@ -111,16 +114,21 @@ const initialStore: AppRootStateType = {
         ]
     },
     app: {
-        status: 'idle',
+        status: 'succeeded',
         error: null,
-        isInitialized: false,
+        isInitialized: true,
     },
     auth: {
-        isLoggedIn: false,
+        isLoggedIn: true,
     },
 };
 
-export const storyBookStore = createStore(rootReducer, initialStore as AppRootStateType, applyMiddleware(thunk));
+//export const storyBookStore = createStore(rootReducer, initialStore as AppRootStateType, applyMiddleware(thunk));
+export const storyBookStore = configureStore({
+    reducer: rootReducer,
+    preloadedState: initialStore,
+    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunk),
+});
 
 export const ReduxStoreProviderDecorator = (storyFn: any) => {
     return (
@@ -129,3 +137,12 @@ export const ReduxStoreProviderDecorator = (storyFn: any) => {
         </Provider>
     );
 };
+
+/*
+export const BrowserRouterDecorator = (storyFn: any) => {
+    return (
+        <HashRouter>
+            {storyFn()}
+        </HashRouter>
+    );
+};*/
