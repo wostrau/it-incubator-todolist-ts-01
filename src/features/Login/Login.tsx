@@ -17,7 +17,7 @@ export const Login = () => {
             rememberMe: false
         },
         onSubmit: values => {
-            dispatch(loginTC(values));
+            dispatch(loginTC({data: values}));
         },
         validate: values => {
             if (!values.email) return {email: 'Email is required'};
