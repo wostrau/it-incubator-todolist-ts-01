@@ -25,3 +25,4 @@ export type AppRootStateType = ReturnType<RootReducerType>;
 export type AllActionsType = TodolistsActionsType | TasksActionsType | AppActionsType | LoginActionsType;
 export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AllActionsType>;
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AllActionsType>;
+export type AppDispatchType = typeof store.dispatch;

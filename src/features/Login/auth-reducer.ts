@@ -1,8 +1,9 @@
 import {setAppStatusAC} from '../../app/app-reducer';
-import {authAPI, LoginParamsType} from '../../api/todolists-api';
+import {authAPI, FieldErrorType, LoginParamsType} from '../../api/todolists-api';
 import {AppThunk} from '../../app/store';
 import {handleServerAppError, handleServerNetworkError} from '../../utilities/error-utilities';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {AxiosError} from 'axios';
 
 // slice
 const slice = createSlice({
@@ -39,21 +40,32 @@ export const {setIsLoggedInAC} = slice.actions;
 } as const);*/
 
 // thunk creators
-export const loginTC = createAsyncThunk('auth/login',
-    async (param: { data: LoginParamsType }, thunkAPI) => {
+export const loginTC = createAsyncThunk<
+    { isLoggedIn: boolean },
+    LoginParamsType,
+    {rejectValue: {errors: Array<string>, fieldsErrors?: Array<FieldErrorType>}}
+    >('auth/login',
+    async (param, thunkAPI) => {
         thunkAPI.dispatch(setAppStatusAC({status: 'loading'}));
         try {
-            const response = await authAPI.login(param.data);
+            const response = await authAPI.login(param);
             if (response.data.resultCode === 0) {
                 thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}));
                 return {isLoggedIn: true};
             } else {
                 handleServerAppError(response.data, thunkAPI.dispatch);
-                return {isLoggedIn: false};
+                return thunkAPI.rejectWithValue({
+                    errors: response.data.messages,
+                    fieldsErrors: response.data.fieldsErrors
+                });
             }
-        } catch (error: any) {
+        } catch (err: any) {
+            const error: AxiosError = err;
             handleServerNetworkError(error, thunkAPI.dispatch);
-            return {isLoggedIn: false};
+            return thunkAPI.rejectWithValue({
+                errors: [error.message],
+                fieldsErrors: undefined
+            });
         }
     });
 

@@ -1,9 +1,15 @@
 import React from 'react';
 import {Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from '@mui/material';
-import {useFormik} from 'formik';
+import {FormikHelpers, useFormik} from 'formik';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {loginTC} from './auth-reducer';
 import {useNavigate} from 'react-router-dom';
+
+type FormValuesType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
 
 export const Login = () => {
     const dispatch = useAppDispatch();
@@ -16,8 +22,14 @@ export const Login = () => {
             password: '',
             rememberMe: false
         },
-        onSubmit: values => {
-            dispatch(loginTC({data: values}));
+        onSubmit: async (values, formikHelpers: FormikHelpers<FormValuesType>) => {
+            const response = await dispatch(loginTC(values));
+            if (loginTC.rejected.match(response)) {
+                if (response.payload?.fieldsErrors?.length) {
+                    const error = response.payload?.fieldsErrors[0];
+                    formikHelpers.setFieldError(error.field, error.error);
+                }
+            }
         },
         validate: values => {
             if (!values.email) return {email: 'Email is required'};
