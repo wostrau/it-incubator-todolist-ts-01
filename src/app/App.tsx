@@ -6,18 +6,20 @@ import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
 import {TodolistList} from '../features/TodolistList/TodolistList';
 import {useAppDispatch, useAppSelector} from './hooks';
 import {Route, Routes} from 'react-router-dom';
-import {Login} from '../features/Login/Login';
+import {Login} from '../features/Auth/Login';
 import {initializeAppTC} from './app-reducer';
-import {logoutTC} from '../features/Login/auth-reducer';
+import {logoutTC} from '../features/Auth/auth-reducer';
+import {selectIsInitialized, selectStatus} from './app-selector';
+import {selectIsLoggedIn} from '../features/Auth/auth-selector';
 
 type PropsType = {
     demo?: boolean
 }
 
 export const App = ({demo = false}: PropsType) => {
-    const status = useAppSelector(state => state.app.status);
-    const isInitialized = useAppSelector(state => state.app.isInitialized);
-    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
+    const status = useAppSelector(selectStatus);
+    const isInitialized = useAppSelector(selectIsInitialized);
+    const isLoggedIn = useAppSelector(selectIsLoggedIn);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

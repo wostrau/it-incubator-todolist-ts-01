@@ -12,13 +12,14 @@ import {
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
 import {useNavigate} from 'react-router-dom';
+import {selectIsLoggedIn} from '../Auth/auth-selector';
 
 type PropsType = {
     demo?: boolean
 }
 
 export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
-    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
+    const isLoggedIn = useAppSelector(selectIsLoggedIn);
     const todolists = useAppSelector(state => state.todolists);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
