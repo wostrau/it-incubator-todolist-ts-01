@@ -1,11 +1,10 @@
 import {v1} from 'uuid';
 import {
-    addTaskAC,
     fetchTasksTC,
     tasksReducer,
     TasksStateType,
     updateTaskAC,
-    removeTaskTC
+    removeTaskTC, addTaskTC
 } from './tasks-reducer';
 import {addTodolistAC, removeTodolistAC, setTodolistsAC} from '../todolists-reducer';
 import {TaskPriorities, TaskStatuses} from '../../../../api/todolists-api';
@@ -104,20 +103,20 @@ test('correct task should be removed from correct array', () => {
     expect(endState['todolistId1'].every(t => t.id !== startState['todolistId1'][0].id)).toBeTruthy();
 });
 test('correct task should be added to correct array', () => {
-    const action = addTaskAC({
-        task: {
-            id: v1(),
-            title: 'ANGULAR',
-            status: TaskStatuses.InProgress,
-            order: 0,
-            description: '',
-            startDate: '',
-            addedDate: '',
-            priority: TaskPriorities.Middle,
-            deadline: '',
-            todoListId: 'todolistId1'
-        }
-    });
+    const task = {
+        id: v1(),
+        title: 'ANGULAR',
+        status: TaskStatuses.InProgress,
+        order: 0,
+        description: '',
+        startDate: '',
+        addedDate: '',
+        priority: TaskPriorities.Middle,
+        deadline: '',
+        todoListId: 'todolistId1'
+    }
+
+    const action = addTaskTC.fulfilled(task, 'requestId', {todolistId: task.todoListId, title: task.title});
     const endState = tasksReducer(startState, action);
 
     expect(endState['todolistId2'].length).toBe(3);

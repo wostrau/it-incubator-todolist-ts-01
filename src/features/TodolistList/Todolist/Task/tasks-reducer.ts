@@ -12,25 +12,11 @@ import {setAppStatusAC} from '../../../../app/app-reducer';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utilities/error-utilities';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-// initial state
-const initialState = {} as TasksStateType;
 
-// slice
 const slice = createSlice({
     name: 'tasks',
-    initialState: initialState,
+    initialState: {} as TasksStateType,
     reducers: {
-        /*setTasksAC(state, action: PayloadAction<{ todolistId: string, tasks: TaskType[] }>) {
-            state[action.payload.todolistId] = action.payload.tasks;
-        },*/
-        addTaskAC(state, action: PayloadAction<{ task: TaskType }>) {
-            state[action.payload.task.todoListId].unshift(action.payload.task);
-        },
-        /*removeTaskAC(state, action: PayloadAction<{ todolistId: string, taskId: string }>) {
-            const tasks = state[action.payload.todolistId];
-            const index = tasks.findIndex(t => t.id === action.payload.taskId);
-            if (index > -1) tasks.splice(index, 1);
-        },*/
         updateTaskAC(state, action: PayloadAction<{ todolistId: string, taskId: string, model: UpdateDomainTaskModelType }>) {
             const tasks = state[action.payload.todolistId];
             const index = tasks.findIndex(t => t.id === action.payload.taskId);
@@ -54,6 +40,9 @@ const slice = createSlice({
             const tasks = state[action.payload.todolistId];
             const index = tasks.findIndex(t => t.id === action.payload.taskId);
             if (index > -1) tasks.splice(index, 1);
+        });
+        builder.addCase(addTaskTC.fulfilled,(state, action)=>{
+            state[action.payload.todoListId].unshift(action.payload);
         });
     },
 })
@@ -93,10 +82,7 @@ export const tasksReducer = slice.reducer;
 };*/
 
 // action creators
-export const {
-    addTaskAC,
-    updateTaskAC,
-} = slice.actions;
+export const {updateTaskAC} = slice.actions;
 /*export const setTasksAC = (todolistId: string, tasks: TaskType[]) => ({
     type: 'SET-TASKS',
     todolistId: todolistId,
@@ -116,47 +102,42 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateDo
 } as const);*/
 
 // thunks created with redux-toolkit pattern
-export const fetchTasksTC = createAsyncThunk('tasks/fetchTasks', async (
-    param: { todolistId: string }, thunkAPI
-) => {
-    thunkAPI.dispatch(setAppStatusAC({status: 'loading'}));
-    const response = await todolistsAPI.getTasks(param.todolistId);
-    thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}));
-    return {todolistId: param.todolistId, tasks: response.data.items};
-});
-export const removeTaskTC = createAsyncThunk('tasks/removeTask', async (
-    param: { todolistId: string, taskId: string }, thunkAPI
-) => {
-    await todolistsAPI.deleteTask(param.todolistId, param.taskId);
-    return {todolistId: param.todolistId, taskId: param.taskId};
-});
-
-// thunk creators
-/*export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
-    dispatch(setAppStatusAC({status: 'loading'}));
-    todolistsAPI.getTasks(todolistId)
-        .then(r => {
-            dispatch(setTasksAC({todolistId: todolistId, tasks: r.data.items}));
-            dispatch(setAppStatusAC({status: 'succeeded'}));
-        })
-        .catch(error => handleServerNetworkError(error, dispatch));
-};*/
-/*export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => dispatch => {
-    todolistsAPI.deleteTask(todolistId, taskId)
-        .then(r => dispatch(removeTaskAC({todolistId: todolistId, taskId: taskId})))
-        .catch(error => handleServerNetworkError(error, dispatch));
-};*/
-export const addTaskTC = (todolistId: string, title: string): AppThunk => dispatch => {
-    dispatch(setAppStatusAC({status: 'loading'}));
-    todolistsAPI.createTask(todolistId, title)
-        .then(r => {
-            if (r.data.resultCode === 0) {
-                dispatch(addTaskAC({task: r.data.data.item}));
+export const fetchTasksTC = createAsyncThunk(
+    'tasks/fetchTasks',
+    async (param: { todolistId: string }, {dispatch}) => {
+        dispatch(setAppStatusAC({status: 'loading'}));
+        const response = await todolistsAPI.getTasks(param.todolistId);
+        dispatch(setAppStatusAC({status: 'succeeded'}));
+        return {todolistId: param.todolistId, tasks: response.data.items};
+    }
+);
+export const removeTaskTC = createAsyncThunk(
+    'tasks/removeTask',
+    async (param: { todolistId: string, taskId: string }) => {
+        await todolistsAPI.deleteTask(param.todolistId, param.taskId);
+        return {todolistId: param.todolistId, taskId: param.taskId};
+    }
+);
+export const addTaskTC = createAsyncThunk(
+    '',
+    async (param: {todolistId: string, title: string}, {dispatch, rejectWithValue}) => {
+        dispatch(setAppStatusAC({status: 'loading'}));
+        try {
+            const response = await todolistsAPI.createTask(param.todolistId, param.title);
+            if (response.data.resultCode === 0) {
                 dispatch(setAppStatusAC({status: 'succeeded'}));
-            } else handleServerAppError(r.data, dispatch);
-        })
-        .catch(error => handleServerNetworkError(error, dispatch));
-};
+                return response.data.data.item;
+            } else {
+                handleServerAppError(response.data, dispatch);
+                return rejectWithValue(null);
+            }
+        } catch (error: any) {
+            handleServerNetworkError(error, dispatch);
+            return rejectWithValue(null);
+        }
+    }
+);
+
 export const updateTaskTC = (todolistId: string, taskId: string, domainModel: UpdateDomainTaskModelType): AppThunk => {
     return (dispatch: AppDispatch, getState: () => AppRootStateType) => {
         const state = getState();
@@ -186,7 +167,6 @@ export const updateTaskTC = (todolistId: string, taskId: string, domainModel: Up
 
 // types
 export type TasksActionsType =
-    | ReturnType<typeof addTaskAC>
     | ReturnType<typeof updateTaskAC>
     | setTodolistsActionType
     | removeTodolistActionType
