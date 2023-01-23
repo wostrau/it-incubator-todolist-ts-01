@@ -34,10 +34,10 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
         dispatch(removeTaskTC({todolistId: props.todolist.id, taskId: taskId}));
     }, [dispatch, props.todolist.id]);
     const changeTaskStatus = useCallback((taskId: string, status: TaskStatuses) => {
-        dispatch(updateTaskTC(props.todolist.id, taskId, {status: status}))
+        dispatch(updateTaskTC({todolistId: props.todolist.id, taskId: taskId, model: {status: status}}))
     }, [dispatch, props.todolist.id]);
     const changeTaskTitle = useCallback((taskId: string, newTitle: string) => {
-        dispatch(updateTaskTC(props.todolist.id, taskId, {title: newTitle}));
+        dispatch(updateTaskTC({todolistId: props.todolist.id, taskId: taskId, model: {title: newTitle}}));
     }, [dispatch, props.todolist.id]);
 
     const onAllClickHandler = useCallback(() => {

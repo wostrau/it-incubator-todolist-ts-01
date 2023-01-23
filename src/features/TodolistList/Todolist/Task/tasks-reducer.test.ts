@@ -1,12 +1,6 @@
 import {v1} from 'uuid';
-import {
-    fetchTasksTC,
-    tasksReducer,
-    TasksStateType,
-    updateTaskAC,
-    removeTaskTC, addTaskTC
-} from './tasks-reducer';
-import {addTodolistAC, removeTodolistAC, setTodolistsAC} from '../todolists-reducer';
+import {addTaskTC, fetchTasksTC, removeTaskTC, tasksReducer, TasksStateType, updateTaskTC} from './tasks-reducer';
+import {addTodolistTC, fetchTodolistsTC, removeTodolistTC} from '../todolists-reducer';
 import {TaskPriorities, TaskStatuses} from '../../../../api/todolists-api';
 
 let startState: TasksStateType = {};
@@ -126,11 +120,12 @@ test('correct task should be added to correct array', () => {
     expect(endState['todolistId1'][0].status).toBe(TaskStatuses.InProgress);
 });
 test('correct task title should be changed in correct array', () => {
-    const action = updateTaskAC({
+    const updateModel = {
         todolistId: 'todolistId1',
         taskId: startState['todolistId1'][0].id,
         model: {title: 'REDUX'}
-    });
+    };
+    const action = updateTaskTC.fulfilled(updateModel, 'requestId', updateModel);
     const endState = tasksReducer(startState, action);
 
     expect(endState['todolistId1'].length).toBe(3);
@@ -138,11 +133,12 @@ test('correct task title should be changed in correct array', () => {
     expect(endState['todolistId2'][0].title).toBe('Monitor');
 });
 test('correct task status should be changed in correct array', () => {
-    const action = updateTaskAC({
+    const updateModel = {
         todolistId: 'todolistId1',
         taskId: startState['todolistId1'][0].id,
         model: {status: TaskStatuses.InProgress}
-    });
+    };
+    const action = updateTaskTC.fulfilled(updateModel, 'requestId', updateModel);
     const endState = tasksReducer(startState, action);
 
     expect(endState['todolistId1'][0].status).toBe(TaskStatuses.InProgress);
@@ -150,8 +146,8 @@ test('correct task status should be changed in correct array', () => {
     expect(endState['todolistId2'][0].status).toBe(TaskStatuses.InProgress);
 });
 test('new property with new array for tasks should be added when new todolist is added', () => {
-    const newTodolist = {id: v1(), title: 'What to do', filter: 'all', order: 0, addedDate: ''};
-    const action = addTodolistAC({todolist: newTodolist});
+    const param = {todolist: {id: v1(), title: 'What to do', filter: 'all', order: 0, addedDate: ''}};
+    const action = addTodolistTC.fulfilled(param, 'requestId', {title: param.todolist.title});
     const endState = tasksReducer(startState, action);
 
     const keys = Object.keys(endState);
@@ -162,7 +158,8 @@ test('new property with new array for tasks should be added when new todolist is
     expect(endState[newKey]).toStrictEqual([]);
 });
 test('property with todolistId should be deleted', () => {
-    const action = removeTodolistAC({id: 'todolistId2'});
+    const param = {id: 'todolistId2'};
+    const action = removeTodolistTC.fulfilled(param, 'requestId', param);
     const endState = tasksReducer(startState, action);
     const keys = Object.keys(endState);
 
@@ -170,12 +167,13 @@ test('property with todolistId should be deleted', () => {
     expect(endState['todolistId2']).toBeUndefined();
 });
 test('empty arrays for tasks should be added correctly while setting todolists', () => {
-    const action = setTodolistsAC({
+    const payload = {
         todolists: [
             {id: '1', title: 'Todolist #1', order: 0, addedDate: ''},
             {id: '2', title: 'Todolist #2', order: 0, addedDate: ''}
         ]
-    });
+    };
+    const action = fetchTodolistsTC.fulfilled(payload, 'requestId');
     const endState = tasksReducer({}, action);
     const keys = Object.keys(endState);
 

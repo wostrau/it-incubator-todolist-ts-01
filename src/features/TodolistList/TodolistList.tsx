@@ -30,13 +30,13 @@ export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
     }, [dispatch, demo, isLoggedIn, navigate]);
 
     const addTodolist = useCallback((title: string) => {
-        dispatch(addTodolistTC(title));
+        dispatch(addTodolistTC({title: title}));
     }, [dispatch]);
     const changeTodolistTitle = useCallback((todolistId: string, title: string) => {
-        dispatch(changeTodolistTitleTC(todolistId, title));
+        dispatch(changeTodolistTitleTC({id: todolistId, title: title}));
     }, [dispatch]);
     const removeTodolist = useCallback((todolistId: string) => {
-        dispatch(removeTodolistTC(todolistId));
+        dispatch(removeTodolistTC({id: todolistId}));
     }, [dispatch]);
     // filter changes in REDUX / no server response with 'filter' property!
     const changeTodolistFilter = useCallback((value: FilterValuesType, todolistId: string) => {
