@@ -5,7 +5,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AxiosError} from 'axios';
 
 // slice
-const slice = createSlice({
+export const slice = createSlice({
     name: 'auth',
     initialState: {isLoggedIn: false} as LoginStateType,
     reducers: {
@@ -14,10 +14,10 @@ const slice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(loginTC.fulfilled, (state) => {
+        builder.addCase(login.fulfilled, (state) => {
             state.isLoggedIn = true;
         });
-        builder.addCase(logoutTC.fulfilled, (state) => {
+        builder.addCase(logout.fulfilled, (state) => {
             state.isLoggedIn = false;
         });
     },
@@ -42,7 +42,7 @@ export const {setIsLoggedInAC} = slice.actions;
 } as const);*/
 
 // thunk creators
-export const loginTC = createAsyncThunk<undefined, LoginParamsType, { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }>(
+const login = createAsyncThunk<undefined, LoginParamsType, { rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> } }>(
     'auth/login',
     async (param, thunkAPI) => {
         thunkAPI.dispatch(setAppStatusAC({status: 'loading'}));
@@ -66,7 +66,7 @@ export const loginTC = createAsyncThunk<undefined, LoginParamsType, { rejectValu
             });
         }
     });
-export const logoutTC = createAsyncThunk(
+const logout = createAsyncThunk(
     'auth/logout',
     async (param, thunkAPI) => {
         thunkAPI.dispatch(setAppStatusAC({status: 'loading'}));
@@ -83,7 +83,7 @@ export const logoutTC = createAsyncThunk(
             return thunkAPI.rejectWithValue({});
         }
     });
-
+export const authAsyncActions = {login, logout}
 /*export const loginTC = (data: LoginParamsType): AppThunk => dispatch => {
     dispatch(setAppStatusAC({status: 'loading'}));
     authAPI.login(data)

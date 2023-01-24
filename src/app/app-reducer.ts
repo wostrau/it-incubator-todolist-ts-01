@@ -18,7 +18,7 @@ const slice = createSlice({
         },
     },
     extraReducers: builder => {
-        builder.addCase(initializeAppTC.fulfilled, (state) => {
+        builder.addCase(initializeApp.fulfilled, (state) => {
             state.isInitialized = true;
         });
     }
@@ -26,13 +26,14 @@ const slice = createSlice({
 export const appReducer = slice.reducer;
 export const {setAppStatusAC, setAppErrorAC} = slice.actions;
 
-export const initializeAppTC = createAsyncThunk(
+const initializeApp = createAsyncThunk(
     'app/initializeApp',
     async (param, {dispatch}) => {
         const response = await authAPI.me();
         if (response.data.resultCode === 0) dispatch(setIsLoggedInAC({isLoggedIn: true}));
     });
 
+export const appAsyncActions = {initializeApp}
 // types
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
 export type AppInitialStateType = {

@@ -7,23 +7,22 @@ import {TaskStatuses, TaskType} from '../../../../api/todolists-api';
 import {useActions} from '../../../../app/store';
 import {tasksActions} from '../../index';
 
-type PropsType = {
-    task: TaskType
-}
-
+type PropsType = { task: TaskType };
 export const Task = React.memo((props: PropsType) => {
     const {updateTask, removeTask} = useActions(tasksActions);
-
     const onClickHandler = useCallback(() => {
         removeTask({todolistId: props.task.todoListId, taskId: props.task.id});
     }, [props, removeTask]);
-
     const onChangeStatusHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        let checkedStatus: TaskStatuses;
-        if (event.currentTarget.checked) {
-            checkedStatus = TaskStatuses.Completed
-        } else checkedStatus = TaskStatuses.InProgress;
-        updateTask({todolistId: props.task.todoListId, taskId: props.task.id, model: {status: checkedStatus}});
+        updateTask({
+            todolistId: props.task.todoListId,
+            taskId: props.task.id,
+            model: {
+                status: event.currentTarget.checked
+                    ? TaskStatuses.Completed
+                    : TaskStatuses.InProgress
+            },
+        });
     }, [props, updateTask]);
     const onChangeTitleHandler = useCallback((newTitle: string) => {
         updateTask({todolistId: props.task.todoListId, taskId: props.task.id, model: {title: newTitle}});

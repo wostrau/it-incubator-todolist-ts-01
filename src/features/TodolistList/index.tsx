@@ -1,6 +1,7 @@
 import {tasksAsyncActions} from './tasks-reducer';
 import {todolistsAsyncActions} from './todolists-reducer';
 import {slice} from './todolists-reducer';
+import {TodolistList} from './TodolistList';
 
 const todolistsActions = {
     ...todolistsAsyncActions,
@@ -12,4 +13,4 @@ const tasksActions = {
     ...slice.actions
 };
 
-export {tasksActions, todolistsActions};
+export {tasksActions, todolistsActions, TodolistList};

@@ -1,12 +1,12 @@
 import {ActionCreatorsMapObject, bindActionCreators, combineReducers} from 'redux';
-import thunk, {ThunkAction, ThunkDispatch} from 'redux-thunk';
-import {TodolistsActionsType, todolistsReducer} from '../features/TodolistList/todolists-reducer';
+import thunk from 'redux-thunk';
+import {todolistsReducer} from '../features/TodolistList/todolists-reducer';
 import {tasksReducer} from '../features/TodolistList/tasks-reducer';
-import {AppActionsType, appReducer} from './app-reducer';
-import {authReducer, LoginActionsType} from '../features/Auth/auth-reducer';
+import {appReducer} from './app-reducer';
+import {authReducer} from '../features/Auth/auth-reducer';
 import {configureStore} from '@reduxjs/toolkit';
 import {useMemo} from 'react';
-import {useAppDispatch} from './hooks';
+import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
 const rootReducer = combineReducers({
     todolists: todolistsReducer,
@@ -24,10 +24,12 @@ export const store = configureStore({
 // types
 export type RootReducerType = typeof rootReducer;
 export type AppRootStateType = ReturnType<RootReducerType>;
-export type AllActionsType = TodolistsActionsType | AppActionsType | LoginActionsType;
-export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AllActionsType>;
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AllActionsType>;
+/*export type AllActionsType = TodolistsActionsType | AppActionsType | LoginActionsType;*/
+/*export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AllActionsType>;*/
+/*export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AllActionsType>;*/
 export type AppDispatchType = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatchType>();
+export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector;
 
 export function useActions<T extends ActionCreatorsMapObject<any>>(actions: T) {
   const dispatch = useAppDispatch();

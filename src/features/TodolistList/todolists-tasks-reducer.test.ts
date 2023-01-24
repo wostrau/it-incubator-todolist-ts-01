@@ -1,6 +1,6 @@
-import {TodolistDomainType, todolistsReducer} from './todolists-reducer';
-import {tasksReducer, TasksStateType} from './tasks-reducer';
 import {v1} from 'uuid';
+import {todolistsReducer, TodolistDomainType} from './todolists-reducer';
+import {tasksReducer, TasksStateType} from './tasks-reducer';
 import {useActions} from '../../app/store';
 import {todolistsActions} from './index';
 

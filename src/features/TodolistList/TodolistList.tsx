@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect} from 'react';
 import {Container, Grid, Paper} from '@mui/material';
 import {Todolist} from './Todolist/Todolist';
-import {useAppSelector} from '../../app/hooks';
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
 import {useNavigate} from 'react-router-dom';
 import {selectIsLoggedIn} from '../Auth/selectors';
-import {useActions} from '../../app/store';
+import {useActions, useAppSelector} from '../../app/store';
 import {todolistsActions} from './index';
 
 type PropsType = {

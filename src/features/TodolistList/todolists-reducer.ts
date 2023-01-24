@@ -92,8 +92,5 @@ const changeTodolistTitle = createAsyncThunk(
 );
 export const todolistsAsyncActions = {fetchTodolists, removeTodolist, addTodolist, changeTodolistTitle};
 
-export type TodolistsActionsType =
-    ReturnType<typeof changeTodolistFilter>
-    | ReturnType<typeof changeTodolistEntityStatus>;
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TodolistDomainType = TodolistType & { filter: FilterValuesType, entityStatus: RequestStatusType };
