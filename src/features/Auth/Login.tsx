@@ -4,7 +4,7 @@ import {FormikHelpers, useFormik} from 'formik';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {loginTC} from './auth-reducer';
 import {useNavigate} from 'react-router-dom';
-import {selectIsLoggedIn} from './auth-selector';
+import {authSelectors} from './index';
 
 type FormValuesType = {
     email: string
@@ -15,7 +15,7 @@ type FormValuesType = {
 export const Login = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const isLoggedIn = useAppSelector(selectIsLoggedIn);
+    const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn);
 
     const formik = useFormik({
         initialValues: {

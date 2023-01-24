@@ -9,17 +9,17 @@ import {Route, Routes} from 'react-router-dom';
 import {Login} from '../features/Auth/Login';
 import {initializeAppTC} from './app-reducer';
 import {logoutTC} from '../features/Auth/auth-reducer';
-import {selectIsInitialized, selectStatus} from './app-selector';
-import {selectIsLoggedIn} from '../features/Auth/auth-selector';
+import {authSelectors} from '../features/Auth';
+import {appSelectors} from './index';
 
 type PropsType = {
     demo?: boolean
 }
 
 export const App = ({demo = false}: PropsType) => {
-    const status = useAppSelector(selectStatus);
-    const isInitialized = useAppSelector(selectIsInitialized);
-    const isLoggedIn = useAppSelector(selectIsLoggedIn);
+    const status = useAppSelector(appSelectors.selectStatus);
+    const isInitialized = useAppSelector(appSelectors.selectIsInitialized);
+    const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

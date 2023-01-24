@@ -1,35 +1,45 @@
 import {Task} from './Task';
-import {action} from '@storybook/addon-actions';
 import React from 'react';
-import {TaskStatuses} from '../../../../api/todolists-api';
+import {TaskPriorities, TaskStatuses, TaskType} from '../../../../api/todolists-api';
 
 export default {
     title: 'Task component',
     component: Task
 }
 
-const removeTaskCallback = action('Task removed');
-const changeTaskStatusCallback = action('Status changed');
-const changeTaskTitleCallback = action('Title changed');
-
 export const TaskBaseExample = (props: any) => {
+    const task1 = {
+        description: '',
+        title: 'HTML',
+        status: TaskStatuses.InProgress,
+        priority: TaskPriorities.Middle,
+        startDate: '',
+        deadline: '',
+        id: '1',
+        todoListId: '1.1',
+        order: 0,
+        addedDate: '',
+    } as TaskType;
+    const task2 = {
+        description: '',
+        title: 'CSS',
+        status: TaskStatuses.InProgress,
+        priority: TaskPriorities.Middle,
+        startDate: '',
+        deadline: '',
+        id: '2',
+        todoListId: '1.1',
+        order: 0,
+        addedDate: '',
+    } as TaskType;
+
     return (
         <>
             <Task
-                id={'1'}
-                title={'HTML5'}
-                status={TaskStatuses.Completed}
-                removeTask={removeTaskCallback}
-                changeTaskStatus={changeTaskStatusCallback}
-                changeTaskTitle={()=>{}}
+                task={task1}
             />
             <Task
-                id={'2'}
-                title={'SCSS'}
-                status={TaskStatuses.InProgress}
-                removeTask={removeTaskCallback}
-                changeTaskStatus={changeTaskStatusCallback}
-                changeTaskTitle={changeTaskTitleCallback}
+                task={task2}
             />
         </>
     )

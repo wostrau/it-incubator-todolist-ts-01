@@ -3,43 +3,43 @@ import '../../../../app/App.css';
 import {EditableSpan} from '../../../../components/EditableSpan/EditableSpan';
 import {Checkbox, IconButton} from '@mui/material';
 import {Delete} from '@mui/icons-material';
-import {TaskStatuses} from '../../../../api/todolists-api';
+import {TaskStatuses, TaskType} from '../../../../api/todolists-api';
+import {useActions} from '../../../../app/store';
+import {tasksActions} from '../../index';
 
 type PropsType = {
-    id: string
-    title: string
-    status: TaskStatuses
-    removeTask: (id: string) => void
-    changeTaskStatus: (id: string, status: TaskStatuses) => void
-    changeTaskTitle: (id: string, newTitle: string) => void
+    task: TaskType
 }
 
 export const Task = React.memo((props: PropsType) => {
+    const {updateTask, removeTask} = useActions(tasksActions);
+
     const onClickHandler = useCallback(() => {
-        props.removeTask(props.id);
-    }, [props]);
+        removeTask({todolistId: props.task.todoListId, taskId: props.task.id});
+    }, [props, removeTask]);
+
     const onChangeStatusHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         let checkedStatus: TaskStatuses;
         if (event.currentTarget.checked) {
             checkedStatus = TaskStatuses.Completed
         } else checkedStatus = TaskStatuses.InProgress;
-        props.changeTaskStatus(props.id, checkedStatus);
-    }, [props]);
+        updateTask({todolistId: props.task.todoListId, taskId: props.task.id, model: {status: checkedStatus}});
+    }, [props, updateTask]);
     const onChangeTitleHandler = useCallback((newTitle: string) => {
-        props.changeTaskTitle(props.id, newTitle);
-    }, [props]);
+        updateTask({todolistId: props.task.todoListId, taskId: props.task.id, model: {title: newTitle}});
+    }, [props, updateTask]);
 
     return (
         <div
-            style={props.status === TaskStatuses.Completed ? {opacity: '0.5'} : {}}
-            key={props.id}
+            style={props.task.status === TaskStatuses.Completed ? {opacity: '0.5'} : {}}
+            key={props.task.id}
         >
             <Checkbox
                 onChange={onChangeStatusHandler}
-                checked={props.status === TaskStatuses.Completed}
+                checked={props.task.status === TaskStatuses.Completed}
             />
             <EditableSpan
-                title={props.title}
+                title={props.task.title}
                 onChange={onChangeTitleHandler}
             />
             <IconButton

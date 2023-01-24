@@ -1,18 +1,12 @@
 import React, {useCallback, useEffect} from 'react';
 import {Container, Grid, Paper} from '@mui/material';
 import {Todolist} from './Todolist/Todolist';
-import {
-    addTodolistTC,
-    changeTodolistFilterAC,
-    changeTodolistTitleTC,
-    fetchTodolistsTC,
-    FilterValuesType,
-    removeTodolistTC
-} from './Todolist/todolists-reducer';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {useAppSelector} from '../../app/hooks';
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
 import {useNavigate} from 'react-router-dom';
-import {selectIsLoggedIn} from '../Auth/auth-selector';
+import {selectIsLoggedIn} from '../Auth/selectors';
+import {useActions} from '../../app/store';
+import {todolistsActions} from './index';
 
 type PropsType = {
     demo?: boolean
@@ -22,27 +16,17 @@ export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
     const isLoggedIn = useAppSelector(selectIsLoggedIn);
     const todolists = useAppSelector(state => state.todolists);
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+    const {addTodolist, fetchTodolists} = useActions(todolistsActions);
 
     useEffect(() => {
         if (demo) return;
         if (!isLoggedIn) navigate('/login');
-        dispatch(fetchTodolistsTC());
-    }, [dispatch, demo, isLoggedIn, navigate]);
+        fetchTodolists();
+    }, [fetchTodolists, demo, isLoggedIn, navigate]);
 
-    const addTodolist = useCallback((title: string) => {
-        dispatch(addTodolistTC({title: title}));
-    }, [dispatch]);
-    const changeTodolistTitle = useCallback((todolistId: string, title: string) => {
-        dispatch(changeTodolistTitleTC({id: todolistId, title: title}));
-    }, [dispatch]);
-    const removeTodolist = useCallback((todolistId: string) => {
-        dispatch(removeTodolistTC({id: todolistId}));
-    }, [dispatch]);
-    // filter changes in REDUX / no server response with 'filter' property!
-    const changeTodolistFilter = useCallback((value: FilterValuesType, todolistId: string) => {
-        dispatch(changeTodolistFilterAC({id: todolistId, filter: value}));
-    }, [dispatch]);
+    const addTodolistCallback = useCallback((title: string) => {
+        addTodolist({title: title});
+    },[addTodolist]);
 
     return (
         <Container fixed>
@@ -50,7 +34,9 @@ export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
                 container
                 style={{padding: '20px'}}
             >
-                <AddItemForm addItem={addTodolist}/>
+                <AddItemForm
+                    addItem={addTodolistCallback}
+                />
             </Grid>
             <Grid container spacing={3}>
                 {todolists.map(tl => {
@@ -60,9 +46,6 @@ export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
                                 <Todolist
                                     demo={demo}
                                     todolist={tl}
-                                    changeFilter={changeTodolistFilter}
-                                    removeTodolist={removeTodolist}
-                                    changeTodolistTitle={changeTodolistTitle}
                                 />
                             </Paper>
                         </Grid>
