@@ -23,10 +23,10 @@ export const Login = () => {
             rememberMe: false
         },
         onSubmit: async (values, formikHelpers: FormikHelpers<FormValuesType>) => {
-            const response = await dispatch(authActions.login(values));
-            if (authActions.login.rejected.match(response)) {
-                if (response.payload?.fieldsErrors?.length) {
-                    const error = response.payload?.fieldsErrors[0];
+            const resultAction = await dispatch(authActions.login(values));
+            if (authActions.login.rejected.match(resultAction)) {
+                if (resultAction.payload?.fieldsErrors?.length) {
+                    const error = resultAction.payload?.fieldsErrors[0];
                     formikHelpers.setFieldError(error.field, error.error);
                 }
             }

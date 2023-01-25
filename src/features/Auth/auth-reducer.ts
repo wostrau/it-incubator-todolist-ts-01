@@ -76,11 +76,17 @@ const logout = createAsyncThunk(
                 thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}));
             } else {
                 handleServerAppError(response.data, thunkAPI.dispatch);
-                return thunkAPI.rejectWithValue({});
+                return thunkAPI.rejectWithValue({
+                    errors: response.data.messages,
+                    fieldsErrors: response.data.fieldsErrors
+                });
             }
         } catch (error: any) {
             handleServerNetworkError(error, thunkAPI.dispatch);
-            return thunkAPI.rejectWithValue({});
+            return thunkAPI.rejectWithValue({
+                errors: [error.message],
+                fieldsErrors: undefined
+            });
         }
     });
 export const authAsyncActions = {login, logout}

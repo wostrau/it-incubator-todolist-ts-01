@@ -2,7 +2,7 @@ import React, {ChangeEvent, useCallback} from 'react';
 import '../../../../app/App.css';
 import {EditableSpan} from '../../../../components/EditableSpan/EditableSpan';
 import {Checkbox, IconButton} from '@mui/material';
-import {Delete} from '@mui/icons-material';
+import {Clear} from '@mui/icons-material';
 import {TaskStatuses, TaskType} from '../../../../api/todolists-api';
 import {useActions} from '../../../../app/store';
 import {tasksActions} from '../../index';
@@ -30,7 +30,7 @@ export const Task = React.memo((props: PropsType) => {
 
     return (
         <div
-            style={props.task.status === TaskStatuses.Completed ? {opacity: '0.5'} : {}}
+            style={props.task.status === TaskStatuses.Completed ? {position: 'relative', opacity: '0.5'} : {position: 'relative'}}
             key={props.task.id}
         >
             <Checkbox
@@ -42,9 +42,11 @@ export const Task = React.memo((props: PropsType) => {
                 onChange={onChangeTitleHandler}
             />
             <IconButton
+                style={{position: 'absolute', top: '0px', right: '0px'}}
                 onClick={onClickHandler}
+                size='medium'
             >
-                <Delete/>
+                <Clear fontSize={'small'} style={{fill: 'lightsalmon'}}/>
             </IconButton>
         </div>
     );

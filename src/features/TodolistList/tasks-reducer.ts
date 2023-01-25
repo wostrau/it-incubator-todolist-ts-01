@@ -1,8 +1,14 @@
-import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../api/todolists-api';
+import {
+    TaskPriorities,
+    TaskStatuses,
+    TaskType,
+    todolistsAPI,
+    UpdateTaskModelType
+} from '../../api/todolists-api';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {setAppStatusAC} from '../../app/app-reducer';
 import {handleServerAppError, handleServerNetworkError} from '../../utilities/error-utilities';
-import {AppRootStateType} from '../../app/store';
+import {AppRootStateType, ThunkError} from '../../app/store';
 import {todolistsAsyncActions} from './todolists-reducer';
 
 
@@ -57,22 +63,23 @@ const removeTask = createAsyncThunk(
         return {todolistId: param.todolistId, taskId: param.taskId};
     }
 );
-const addTask = createAsyncThunk(
-    'tasks/addTask',
-    async (param: { todolistId: string, title: string }, {dispatch, rejectWithValue}) => {
-        dispatch(setAppStatusAC({status: 'loading'}));
+const addTask = createAsyncThunk<TaskType, { todolistId: string, title: string }, ThunkError>(
+    'tasks/addTask', async (param, thunkAPI) => {
+        thunkAPI.dispatch(setAppStatusAC({status: 'loading'}));
         try {
             const response = await todolistsAPI.createTask(param.todolistId, param.title);
             if (response.data.resultCode === 0) {
-                dispatch(setAppStatusAC({status: 'succeeded'}));
+                thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}));
                 return response.data.data.item;
             } else {
-                handleServerAppError(response.data, dispatch);
-                return rejectWithValue(null);
+                handleServerAppError(response.data, thunkAPI.dispatch, false);
+                return thunkAPI.rejectWithValue({
+                    errors: response.data.messages,
+                    fieldsErrors: response.data.fieldsErrors
+                });
             }
         } catch (error: any) {
-            handleServerNetworkError(error, dispatch);
-            return rejectWithValue(null);
+            return handleServerNetworkError(error, thunkAPI);
         }
     }
 );
@@ -80,11 +87,11 @@ const updateTask = createAsyncThunk(
     'tasks/updateTask',
     async (
         param: { todolistId: string, taskId: string, model: UpdateDomainTaskModelType },
-        {dispatch, rejectWithValue, getState}
+        thunkAPI
     ) => {
-        const state = getState() as AppRootStateType;
+        const state = thunkAPI.getState() as AppRootStateType;
         const task = state.tasks[param.todolistId].find(t => t.id === param.taskId);
-        if (!task) return rejectWithValue('task not found')
+        if (!task) return thunkAPI.rejectWithValue('task not found')
 
         const apiModel: UpdateTaskModelType = {
             title: task.title,
@@ -100,12 +107,14 @@ const updateTask = createAsyncThunk(
             if (response.data.resultCode === 0) {
                 return param;
             } else {
-                handleServerAppError(response.data, dispatch);
-                return rejectWithValue(null);
+                handleServerAppError(response.data, thunkAPI.dispatch, false);
+                return thunkAPI.rejectWithValue({
+                    errors: response.data.messages,
+                    fieldsErrors: response.data.fieldsErrors
+                });
             }
         } catch (error: any) {
-            handleServerNetworkError(error, dispatch);
-            return rejectWithValue(null);
+            return handleServerNetworkError(error, thunkAPI);
         }
     }
 );

@@ -7,6 +7,7 @@ import {authReducer} from '../features/Auth/auth-reducer';
 import {configureStore} from '@reduxjs/toolkit';
 import {useMemo} from 'react';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
+import {FieldErrorType} from '../api/todolists-api';
 
 const rootReducer = combineReducers({
     todolists: todolistsReducer,
@@ -32,9 +33,16 @@ export const useAppDispatch = () => useDispatch<AppDispatchType>();
 export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector;
 
 export function useActions<T extends ActionCreatorsMapObject<any>>(actions: T) {
-  const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
 
-  return useMemo(() => {
-      return bindActionCreators(actions, dispatch);
-  }, [actions, dispatch]);
+    return useMemo(() => {
+        return bindActionCreators(actions, dispatch);
+    }, [actions, dispatch]);
 }
+
+export type ThunkError = {
+    rejectValue: {
+        errors: Array<string>,
+        fieldsErrors?: Array<FieldErrorType>
+    }
+};

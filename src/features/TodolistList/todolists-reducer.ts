@@ -2,6 +2,7 @@ import {todolistsAPI, TodolistType} from '../../api/todolists-api';
 import {RequestStatusType, setAppStatusAC} from '../../app/app-reducer';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {handleServerAppError, handleServerNetworkError} from '../../utilities/error-utilities';
+import {ThunkError} from '../../app/store';
 
 export const slice = createSlice({
     name: 'todolists',
@@ -64,28 +65,29 @@ const removeTodolist = createAsyncThunk(
         }
     }
 );
-const addTodolist = createAsyncThunk(
-    'todolists/addTodolist',
-    async (param: { title: string }, {dispatch, rejectWithValue}) => {
-        dispatch(setAppStatusAC({status: 'loading'}));
-        const response = await todolistsAPI.createTodolist(param.title);
+const addTodolist = createAsyncThunk<{ todolist: TodolistType }, { title: string }, ThunkError>(
+    'todolists/addTodolist', async (param, thunkAPI) => {
+        thunkAPI.dispatch(setAppStatusAC({status: 'loading'}));
         try {
+            const response = await todolistsAPI.createTodolist(param.title);
             if (response.data.resultCode === 0) {
-                dispatch(setAppStatusAC({status: 'succeeded'}));
+                thunkAPI.dispatch(setAppStatusAC({status: 'succeeded'}));
                 return {todolist: response.data.data.item};
             } else {
-                handleServerAppError(response.data, dispatch);
-                return rejectWithValue(null);
+                handleServerAppError(response.data, thunkAPI.dispatch, false);
+                return thunkAPI.rejectWithValue({
+                    errors: response.data.messages,
+                    fieldsErrors: response.data.fieldsErrors
+                });
             }
         } catch (error: any) {
-            handleServerNetworkError(error, dispatch);
-            return rejectWithValue(null);
+            return handleServerNetworkError(error, thunkAPI);
         }
     }
 );
 const changeTodolistTitle = createAsyncThunk(
     'todolists/changeTodolistTitle',
-    async (param: { id: string, title: string }, {dispatch}) => {
+    async (param: { id: string, title: string }) => {
         await todolistsAPI.updateTodolistTitle(param.id, param.title);
         return {id: param.id, title: param.title};
     }
