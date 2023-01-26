@@ -4,10 +4,11 @@ import {AddItemForm, AddItemFormSubmitHelperType} from '../../../components/AddI
 import {EditableSpan} from '../../../components/EditableSpan/EditableSpan';
 import {Button, Chip, Paper} from '@mui/material';
 import {Task} from './Task/Task';
-import {TaskStatuses} from '../../../api/todolists-api';
 import {FilterValuesType, TodolistDomainType} from '../todolists-reducer';
-import {useActions, useAppDispatch, useAppSelector} from '../../../app/store';
+import {useAppSelector} from '../../../app/store';
 import {tasksActions, todolistsActions} from '../index';
+import {useActions, useAppDispatch} from '../../../utilities/redux-utilities';
+import {TaskStatuses} from '../../../api/types';
 
 type PropsType = {
     demo?: boolean
@@ -15,25 +16,25 @@ type PropsType = {
 };
 
 export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
-    const {fetchTasks} = useActions(tasksActions);
-    const {changeTodolistFilter, removeTodolist, changeTodolistTitle} = useActions(todolistsActions);
+    const {fetchTasksTC, addTaskTC} = useActions(tasksActions);
+    const {changeTodolistFilterAC, removeTodolistTC, changeTodolistTitleTC} = useActions(todolistsActions);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (demo) return;
-        fetchTasks({todolistId: props.todolist.id});
-    }, [fetchTasks, props.todolist.id, demo]);
+        fetchTasksTC({todolistId: props.todolist.id});
+    }, [fetchTasksTC, props.todolist.id, demo]);
 
     const removeTodolistHandler: MouseEventHandler = useCallback(() => {
-        removeTodolist({id: props.todolist.id})
-    }, [props, removeTodolist]);
+        removeTodolistTC({id: props.todolist.id})
+    }, [props, removeTodolistTC]);
     const changeTodolistTitleHandler = useCallback((newTitle: string) => {
-        changeTodolistTitle({id: props.todolist.id, title: newTitle})
-    }, [props, changeTodolistTitle]);
+        changeTodolistTitleTC({id: props.todolist.id, title: newTitle})
+    }, [props, changeTodolistTitleTC]);
 
     const addTaskCallback = useCallback(async (title: string, helper: AddItemFormSubmitHelperType) => {
-        const resultAction = await dispatch(tasksActions.addTask({todolistId: props.todolist.id, title: title}));
-        if (tasksActions.addTask.rejected.match(resultAction)) {
+        const resultAction = await dispatch(addTaskTC({todolistId: props.todolist.id, title: title}));
+        if (addTaskTC.rejected.match(resultAction)) {
             if (resultAction.payload?.errors?.length) {
                 const errorMessage = resultAction.payload?.errors[0];
                 helper.setError(errorMessage);
@@ -47,8 +48,8 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
     if (props.todolist.filter === 'completed') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed);
 
     const onFilterButtonClickHandler = useCallback((filter: FilterValuesType) => {
-        changeTodolistFilter({id: props.todolist.id, filter: filter})
-    }, [props, changeTodolistFilter]);
+        changeTodolistFilterAC({id: props.todolist.id, filter: filter})
+    }, [props, changeTodolistFilterAC]);
     const renderFilterButton = (filter: FilterValuesType) => {
         return (
             <Button

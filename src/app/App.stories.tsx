@@ -5,7 +5,7 @@ import {ReduxStoreProviderDecorator} from '../stories/ReduxStoreProviderDecorato
 import {withRouter} from 'storybook-addon-react-router-v6';
 
 export default {
-    title: 'App component',
+    title: 'Application component',
     component: App,
     decorators: [ReduxStoreProviderDecorator, withRouter]
 }

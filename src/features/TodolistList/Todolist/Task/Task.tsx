@@ -3,18 +3,18 @@ import '../../../../app/App.css';
 import {EditableSpan} from '../../../../components/EditableSpan/EditableSpan';
 import {Checkbox, IconButton} from '@mui/material';
 import {Clear} from '@mui/icons-material';
-import {TaskStatuses, TaskType} from '../../../../api/todolists-api';
-import {useActions} from '../../../../app/store';
 import {tasksActions} from '../../index';
+import {TaskStatuses, TaskType} from '../../../../api/types';
+import {useActions} from '../../../../utilities/redux-utilities';
 
 type PropsType = { task: TaskType };
 export const Task = React.memo((props: PropsType) => {
-    const {updateTask, removeTask} = useActions(tasksActions);
+    const {updateTaskTC, removeTaskTC} = useActions(tasksActions);
     const onClickHandler = useCallback(() => {
-        removeTask({todolistId: props.task.todoListId, taskId: props.task.id});
-    }, [props, removeTask]);
+        removeTaskTC({todolistId: props.task.todoListId, taskId: props.task.id});
+    }, [props, removeTaskTC]);
     const onChangeStatusHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        updateTask({
+        updateTaskTC({
             todolistId: props.task.todoListId,
             taskId: props.task.id,
             model: {
@@ -23,10 +23,10 @@ export const Task = React.memo((props: PropsType) => {
                     : TaskStatuses.InProgress
             },
         });
-    }, [props, updateTask]);
+    }, [props, updateTaskTC]);
     const onChangeTitleHandler = useCallback((newTitle: string) => {
-        updateTask({todolistId: props.task.todoListId, taskId: props.task.id, model: {title: newTitle}});
-    }, [props, updateTask]);
+        updateTaskTC({todolistId: props.task.todoListId, taskId: props.task.id, model: {title: newTitle}});
+    }, [props, updateTaskTC]);
 
     return (
         <div

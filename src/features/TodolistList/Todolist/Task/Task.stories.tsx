@@ -1,8 +1,8 @@
 import {Task} from './Task';
 import React from 'react';
-import {TaskPriorities, TaskStatuses, TaskType} from '../../../../api/todolists-api';
 import {ReduxStoreProviderDecorator} from '../../../../stories/ReduxStoreProviderDecorator';
 import {withRouter} from 'storybook-addon-react-router-v6';
+import {TaskPriorities, TaskStatuses, TaskType} from '../../../../api/types';
 
 export default {
     title: 'Task component',

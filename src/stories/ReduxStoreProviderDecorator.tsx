@@ -1,14 +1,13 @@
 import {Provider} from 'react-redux';
-import {AppRootStateType, RootReducerType} from '../app/store';
 import {combineReducers} from 'redux';
-import {todolistsReducer} from '../features/TodolistList/todolists-reducer';
-import {tasksReducer} from '../features/TodolistList/tasks-reducer';
+import {todolistsReducer, tasksReducer} from '../features/TodolistList';
 import {v1} from 'uuid';
-import {TaskPriorities, TaskStatuses} from '../api/todolists-api';
-import {appReducer} from '../app/app-reducer';
+import {appReducer} from '../features/Application';
 import thunk from 'redux-thunk';
-import {authReducer} from '../features/Auth/auth-reducer';
+import {authReducer} from '../features/Authentication';
 import {configureStore} from '@reduxjs/toolkit';
+import {AppRootStateType, RootReducerType} from '../utilities/types';
+import {TaskPriorities, TaskStatuses} from '../api/types';
 
 const rootReducer: RootReducerType = combineReducers({
     todolists: todolistsReducer,

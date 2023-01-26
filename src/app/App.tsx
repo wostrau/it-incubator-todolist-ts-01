@@ -5,28 +5,29 @@ import {Menu} from '@mui/icons-material';
 import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar';
 import {TodolistList} from '../features/TodolistList';
 import {Route, Routes} from 'react-router-dom';
-import {authActions, authSelectors, Login} from '../features/Auth';
-import {appActions, appSelectors} from './index';
-import {useActions, useAppSelector} from './store';
+import {useAppSelector} from './store';
+import {authActions, authSelectors, Login} from '../features/Authentication';
+import {appActions, appSelectors} from '../features/Application';
+import {useActions} from '../utilities/redux-utilities';
 
 type PropsType = {
     demo?: boolean
 }
 
 export const App = ({demo = false}: PropsType) => {
+    const {initializeAppTC} = useActions(appActions);
+    const {logoutTC} = useActions(authActions);
     const status = useAppSelector(appSelectors.selectStatus);
     const isInitialized = useAppSelector(appSelectors.selectIsInitialized);
     const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn);
-    const {initializeApp} = useActions(appActions);
-    const {logout} = useActions(authActions);
 
     useEffect(() => {
-        if (!demo) initializeApp();
-    }, [demo, initializeApp]);
+        if (!demo) {
+            initializeAppTC();
+        }
+    }, [demo, initializeAppTC]);
 
-    const onClickHandler = useCallback(() => {
-        logout();
-    }, [logout])
+    const onClickHandler = useCallback(() => logoutTC(), [logoutTC])
 
     if (!isInitialized) {
         return (

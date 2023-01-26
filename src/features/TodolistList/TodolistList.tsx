@@ -3,9 +3,10 @@ import {Container, Grid} from '@mui/material';
 import {Todolist} from './Todolist/Todolist';
 import {AddItemForm, AddItemFormSubmitHelperType} from '../../components/AddItemForm/AddItemForm';
 import {useNavigate} from 'react-router-dom';
-import {selectIsLoggedIn} from '../Auth/selectors';
-import {useActions, useAppDispatch, useAppSelector} from '../../app/store';
+import {selectIsLoggedIn} from '../Authentication/selectors';
+import {useAppSelector} from '../../app/store';
 import {todolistsActions} from './index';
+import {useActions, useAppDispatch} from '../../utilities/redux-utilities';
 
 type PropsType = {
     demo?: boolean
@@ -14,25 +15,25 @@ type PropsType = {
 export const TodolistList: React.FC<PropsType> = ({demo = false}) => {
     const isLoggedIn = useAppSelector(selectIsLoggedIn);
     const todolists = useAppSelector(state => state.todolists);
-    const {fetchTodolists} = useActions(todolistsActions);
+    const {fetchTodolistsTC, addTodolistTC} = useActions(todolistsActions);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         if (demo) return;
         if (!isLoggedIn) navigate('/login');
-        fetchTodolists();
-    }, [fetchTodolists, demo, isLoggedIn, navigate]);
+        fetchTodolistsTC();
+    }, [demo, fetchTodolistsTC, isLoggedIn, navigate]);
 
     const addTodolistCallback = useCallback(async (title: string, helper: AddItemFormSubmitHelperType) => {
-        const resultAction = await dispatch(todolistsActions.addTodolist({title: title}));
-        if (todolistsActions.addTodolist.rejected.match(resultAction)) {
+        const resultAction = await dispatch(addTodolistTC({title: title}));
+        if (addTodolistTC.rejected.match(resultAction)) {
             if (resultAction.payload?.errors?.length) {
                 const errorMessage = resultAction.payload?.errors[0];
                 helper.setError(errorMessage);
             } else helper.setError('SOME ERROR OCCURRED');
         } else helper.setTitle('');
-    }, [dispatch]);
+    }, [dispatch, addTodolistTC]);
 
     return (
         <Container fixed>
