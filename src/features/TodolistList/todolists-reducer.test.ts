@@ -2,8 +2,8 @@ import {v1} from 'uuid';
 import {RequestStatusType} from '../Application';
 import {todolistsActions, todolistsReducer} from './index';
 import {FilterValuesType, TodolistDomainType} from './todolists-reducer';
-import {ThunkError} from '../../utilities/types';
 
+const {changeTodolistFilterAC, changeTodolistEntityStatusAC} = todolistsActions;
 let startState: TodolistDomainType[] = [];
 beforeEach(() => {
     startState = [
@@ -51,7 +51,7 @@ test('correct todolist title should be changed', () => {
 });
 test('todolist filter should be changed correctly', () => {
     const newFilter: FilterValuesType = 'completed';
-    const endState = todolistsReducer(startState, todolistsActions.changeTodolistFilterAC({
+    const endState = todolistsReducer(startState, changeTodolistFilterAC({
         id: startState[0].id,
         filter: newFilter
     }));
@@ -61,7 +61,7 @@ test('todolist filter should be changed correctly', () => {
 });
 test('todolist status should be changed correctly', () => {
     const newStatus: RequestStatusType = 'loading';
-    const endState = todolistsReducer(startState, todolistsActions.changeTodolistEntityStatusAC({
+    const endState = todolistsReducer(startState, changeTodolistEntityStatusAC({
         id: startState[0].id,
         status: newStatus
     }));
@@ -70,7 +70,7 @@ test('todolist status should be changed correctly', () => {
     expect(endState[1].entityStatus).toBe(startState[1].entityStatus);
 });
 test('correct todolists should be set to the state', () => {
-    const action = todolistsActions.fetchTodolistsTC.fulfilled({todolists: startState}, 'requestId', null);
+    const action = todolistsActions.fetchTodolistsTC.fulfilled({todolists: startState}, 'requestId', undefined);
     const endState = todolistsReducer([], action);
 
     expect(endState.length).toBe(2);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, TextField} from '@mui/material';
 import {FormikHelpers, useFormik} from 'formik';
 import {useAppSelector} from '../../app/store';
@@ -17,6 +17,10 @@ export const Login = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn);
+
+    useEffect(()=>{
+        if (isLoggedIn) navigate('/');
+    },[isLoggedIn, navigate]);
 
     const formik = useFormik({
         initialValues: {
@@ -38,8 +42,6 @@ export const Login = () => {
             if (!values.password) return {password: 'Password is required'};
         },
     });
-
-    if (isLoggedIn) navigate('/');
 
     return (
         <Grid container={true} justifyContent={'center'}>

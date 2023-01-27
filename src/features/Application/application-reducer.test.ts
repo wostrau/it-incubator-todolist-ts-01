@@ -1,8 +1,9 @@
-import {appReducer, appActions} from './index';
+import {appReducer} from './index';
 import {AppInitialStateType, RequestStatusType} from './application-reducer';
+import {appActions} from '../commonActions/appActions';
 
 let startState: AppInitialStateType;
-beforeEach(()=>{
+beforeEach(() => {
     startState = {
         status: 'idle',
         error: null,
@@ -10,13 +11,13 @@ beforeEach(()=>{
     }
 });
 
-test('correct error message should be set',()=>{
+test('correct error message should be set', () => {
     const errorMessage = 'some error';
     const endState = appReducer(startState, appActions.setAppErrorAC({error: errorMessage}));
 
     expect(endState.error).toBe(errorMessage);
 });
-test('correct app status should be set',()=>{
+test('correct app status should be set', () => {
     const appStatus: RequestStatusType = 'loading';
     const endState = appReducer(startState, appActions.setAppStatusAC({status: appStatus}));
 

@@ -178,7 +178,7 @@ test('empty arrays for tasks should be added correctly while setting todolists',
             {id: '2', title: 'Todolist #2', order: 0, addedDate: ''}
         ]
     };
-    const action = todolistsActions.fetchTodolistsTC.fulfilled(payload, 'requestId');
+    const action = todolistsActions.fetchTodolistsTC.fulfilled(payload, 'requestId', undefined);
     const endState = tasksReducer({}, action);
     const keys = Object.keys(endState);
 

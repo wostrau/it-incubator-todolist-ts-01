@@ -1,6 +1,7 @@
 import {authAPI} from '../../api/todolists-api';
 import {authActions} from '../Authentication';
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {appActions} from '../commonActions/appActions';
 
 export const slice = createSlice({
     name: 'application',
@@ -9,18 +10,18 @@ export const slice = createSlice({
         error: null,
         isInitialized: false,
     } as AppInitialStateType,
-    reducers: {
-        setAppStatusAC(state, action: PayloadAction<{ status: RequestStatusType }>) {
-            state.status = action.payload.status;
-        },
-        setAppErrorAC(state, action: PayloadAction<{ error: string | null }>) {
-            state.error = action.payload.error;
-        },
-    },
+    reducers: {},
     extraReducers: builder => {
-        builder.addCase(initializeAppTC.fulfilled, (state) => {
-            state.isInitialized = true;
-        });
+        builder
+            .addCase(initializeAppTC.fulfilled, (state) => {
+                state.isInitialized = true;
+            })
+            .addCase(appActions.setAppStatusAC, (state, action) => {
+                state.status = action.payload.status;
+            })
+            .addCase(appActions.setAppErrorAC, (state, action) => {
+                state.error = action.payload.error;
+            });
     }
 });
 

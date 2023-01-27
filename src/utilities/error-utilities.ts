@@ -1,4 +1,4 @@
-import {appActions} from '../features/Application';
+import {appActions} from '../features/commonActions/appActions';
 import {AxiosError} from 'axios';
 import {ResponseType} from '../api/types';
 

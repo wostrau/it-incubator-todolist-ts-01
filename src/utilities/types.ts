@@ -4,7 +4,7 @@ import {FieldErrorType} from '../api/types';
 export type RootReducerType = typeof rootReducer;
 export type AppRootStateType = ReturnType<RootReducerType>;
 export type AppDispatchType = typeof store.dispatch;
-export type ThunkError = {
+export type ThunkErrorType = {
     rejectValue: {
         errors: Array<string>,
         fieldsErrors?: Array<FieldErrorType>
