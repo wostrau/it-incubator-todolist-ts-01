@@ -44,7 +44,7 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
 
     const tasks = useAppSelector(state => state.tasks[props.todolist.id]);
     let tasksForTodolist = tasks;
-    if (props.todolist.filter === 'active') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.InProgress);
+    if (props.todolist.filter === 'active') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.New || t.status === TaskStatuses.InProgress);
     if (props.todolist.filter === 'completed') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed);
 
     const onFilterButtonClickHandler = useCallback((filter: FilterValuesType) => {
