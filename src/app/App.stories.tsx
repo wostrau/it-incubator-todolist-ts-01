@@ -13,5 +13,5 @@ export default {
 //const onChangeTitleCallback = action('Title changed');
 
 export const AppBaseExample = () => {
-    return <App demo={true}/>
+    return <App/>
 };

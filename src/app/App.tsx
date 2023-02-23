@@ -10,11 +10,9 @@ import {authActions, authSelectors, Login} from '../features/Authentication';
 import {appActions, appSelectors} from '../features/Application';
 import {useActions} from '../utilities/redux-utilities';
 
-type PropsType = {
-    demo?: boolean
-}
+type PropsType = {};
 
-export const App = ({demo = false}: PropsType) => {
+export const App = (props: PropsType) => {
     const {initializeAppTC} = useActions(appActions);
     const {logoutTC} = useActions(authActions);
     const status = useAppSelector(appSelectors.selectStatus);
@@ -22,10 +20,10 @@ export const App = ({demo = false}: PropsType) => {
     const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn);
 
     useEffect(() => {
-        if (!demo) {
+        if (!isInitialized) {
             initializeAppTC();
         }
-    }, [demo, initializeAppTC]);
+    }, [initializeAppTC]);
 
     const onClickHandler = useCallback(() => logoutTC(), [logoutTC])
 
@@ -57,7 +55,7 @@ export const App = ({demo = false}: PropsType) => {
                 {status === 'loading' && <LinearProgress/>}
             </AppBar>
             <Routes>
-                <Route path={'/'} element={<TodolistList demo={demo}/>}/>
+                <Route path={'/'} element={<TodolistList demo={false}/>}/>
                 <Route path={'/login'} element={<Login/>}/>
             </Routes>
         </div>

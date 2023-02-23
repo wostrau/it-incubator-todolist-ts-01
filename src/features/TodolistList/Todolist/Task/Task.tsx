@@ -7,7 +7,9 @@ import {tasksActions} from '../../index';
 import {TaskStatuses, TaskType} from '../../../../api/types';
 import {useActions} from '../../../../utilities/redux-utilities';
 
+
 type PropsType = { task: TaskType };
+
 export const Task = React.memo((props: PropsType) => {
     const {updateTaskTC, removeTaskTC} = useActions(tasksActions);
     const onClickHandler = useCallback(() => {

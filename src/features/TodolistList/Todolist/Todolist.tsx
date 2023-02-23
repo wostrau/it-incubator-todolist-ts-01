@@ -19,10 +19,11 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
     const {fetchTasksTC, addTaskTC} = useActions(tasksActions);
     const {changeTodolistFilterAC, removeTodolistTC, changeTodolistTitleTC} = useActions(todolistsActions);
     const dispatch = useAppDispatch();
+    const tasks = useAppSelector(state => state.tasks[props.todolist.id]);
 
     useEffect(() => {
         if (demo) return;
-        fetchTasksTC({todolistId: props.todolist.id});
+        if (!tasks.length) fetchTasksTC({todolistId: props.todolist.id});
     }, [fetchTasksTC, props.todolist.id, demo]);
 
     const removeTodolistHandler: MouseEventHandler = useCallback(() => {
@@ -42,7 +43,6 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
         } else helper.setTitle('');
     }, [dispatch, props]);
 
-    const tasks = useAppSelector(state => state.tasks[props.todolist.id]);
     let tasksForTodolist = tasks;
     if (props.todolist.filter === 'active') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.New || t.status === TaskStatuses.InProgress);
     if (props.todolist.filter === 'completed') tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed);
