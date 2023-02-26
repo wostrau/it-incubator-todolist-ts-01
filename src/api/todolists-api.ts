@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 
 // network settings
 const instance = axios.create({
@@ -23,13 +23,13 @@ export const todolistsAPI = {
     updateTodolistTitle(id: string, title: string) {
         return instance.put<ResponseType>(`/todo-lists/${id}`, {title: title});
     },
-    getTasks(todolistId: string) {
+    getTasks(todolistId: string): Promise<AxiosResponse<GetTasksResponseType>> {
         return instance.get<GetTasksResponseType>(`/todo-lists/${todolistId}/tasks`);
     },
     createTask(todolistId: string, title: string) {
         return instance.post<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks`, {title: title});
     },
-    deleteTask(todolistId: string, taskId: string) {
+    deleteTask(todolistId: string, taskId: string): Promise<AxiosResponse<ResponseType>> {
         return instance.delete<ResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`);
     },
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
@@ -95,7 +95,7 @@ export type ResponseType<D = {}> = {
     messages: string[]
     data: D
 };
-type GetTasksResponseType = {
+export type GetTasksResponseType = {
     error: string | null
     totalCount: number
     items: TaskType[]

@@ -4,11 +4,13 @@ import {AddItemForm} from '../../../components/AddItemForm/AddItemForm';
 import {EditableSpan} from '../../../components/EditableSpan/EditableSpan';
 import {Button, IconButton} from '@mui/material';
 import {Delete} from '@mui/icons-material';
-import {addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC} from './Task/tasks-reducer';
+import {addTaskTC, updateTaskTC} from './Task/tasks-reducer';
 import {Task} from './Task/Task';
 import {TaskStatuses} from '../../../api/todolists-api';
 import {FilterValuesType, TodolistDomainType} from './todolists-reducer';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {useDispatch} from 'react-redux';
+import {fetchTasksSagaAction, removeTaskSagaAction} from './Task/tasks-saga';
 
 
 type PropsType = {
@@ -21,18 +23,19 @@ type PropsType = {
 
 export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
     const dispatch = useAppDispatch();
+    const dispatchSaga = useDispatch();
 
     useEffect(() => {
         if (demo) return;
-        dispatch(fetchTasksTC(props.todolist.id));
-    }, [dispatch, props.todolist.id, demo]);
+        dispatchSaga(fetchTasksSagaAction(props.todolist.id));
+    }, [dispatchSaga, props.todolist.id, demo]);
 
     const addTask = useCallback((title: string) => {
         dispatch(addTaskTC(props.todolist.id, title))
     }, [dispatch, props.todolist.id]);
     const removeTask = useCallback((taskId: string) => {
-        dispatch(removeTaskTC(props.todolist.id, taskId));
-    }, [dispatch, props.todolist.id]);
+        dispatchSaga(removeTaskSagaAction(props.todolist.id, taskId));
+    }, [dispatchSaga, props.todolist.id]);
     const changeTaskStatus = useCallback((taskId: string, status: TaskStatuses) => {
         dispatch(updateTaskTC(props.todolist.id, taskId, {status: status}))
     }, [dispatch, props.todolist.id]);

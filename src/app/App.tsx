@@ -7,8 +7,9 @@ import {TodolistList} from '../features/TodolistList/TodolistList';
 import {useAppDispatch, useAppSelector} from './hooks';
 import {Route, Routes} from 'react-router-dom';
 import {Login} from '../features/Login/Login';
-import {initializeAppTC} from './app-reducer';
 import {logoutTC} from '../features/Login/auth-reducer';
+import {useDispatch} from 'react-redux';
+import {initializeApp} from './app-saga';
 
 type PropsType = {
     demo?: boolean
@@ -19,10 +20,11 @@ export const App = ({demo = false}: PropsType) => {
     const isInitialized = useAppSelector(state => state.app.isInitialized);
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
     const dispatch = useAppDispatch();
+    const dispatchSaga = useDispatch();
 
     useEffect(() => {
-        dispatch(initializeAppTC());
-    }, [dispatch]);
+        dispatchSaga(initializeApp());
+    }, [dispatchSaga]);
 
     const logoutHandler = useCallback(() => {
         dispatch(logoutTC());

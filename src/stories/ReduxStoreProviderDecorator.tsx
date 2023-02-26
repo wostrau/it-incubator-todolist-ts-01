@@ -113,7 +113,7 @@ const initialStore: AppRootStateType = {
     app: {
         status: 'idle',
         error: null,
-        isInitialized: false,
+        isInitialized: true,
     },
     auth: {
         isLoggedIn: false,

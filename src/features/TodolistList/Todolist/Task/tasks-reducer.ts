@@ -1,7 +1,7 @@
 import {addTodolistActionType, removeTodolistActionType, setTodolistsActionType} from '../todolists-reducer';
 import {TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType} from '../../../../api/todolists-api';
 import {AppDispatch, AppRootStateType, AppThunk} from '../../../../app/store';
-import {setAppErrorAC, setAppStatusAC} from '../../../../app/app-reducer';
+import {setAppStatusAC} from '../../../../app/app-reducer';
 import {handleServerAppError, handleServerNetworkError} from '../../../../utilities/error-utilities';
 
 // initial state
@@ -60,7 +60,7 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateDo
 } as const);
 
 // thunk creators
-export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
+/*export const fetchTasksTC = (todolistId: string): AppThunk => dispatch => {
     dispatch(setAppStatusAC('loading'));
     todolistsAPI.getTasks(todolistId)
         .then(r => {
@@ -73,7 +73,7 @@ export const removeTaskTC = (todolistId: string, taskId: string): AppThunk => di
     todolistsAPI.deleteTask(todolistId, taskId)
         .then(r => dispatch(removeTaskAC(todolistId, taskId)))
         .catch(error => handleServerNetworkError(error, dispatch));
-};
+};*/
 export const addTaskTC = (todolistId: string, title: string): AppThunk => dispatch => {
     dispatch(setAppStatusAC('loading'));
     todolistsAPI.createTask(todolistId, title)
