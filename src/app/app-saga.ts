@@ -1,11 +1,11 @@
 import {call, put, takeEvery} from 'redux-saga/effects';
-import {authAPI} from '../api/todolists-api';
+import {authAPI, MeResponseType} from '../api/todolists-api';
 import {setIsLoggedInAC} from '../features/Login/auth-reducer';
 import {setAppInitializedAC} from './app-reducer';
 
 export function* initializeAppWorkerSaga(): Generator<any, void, any> {
-    const response = yield call(authAPI.me);
-    if (response.data.resultCode === 0) yield put(setIsLoggedInAC(true));
+    const data: MeResponseType = yield call(authAPI.me);
+    if (data.resultCode === 0) yield put(setIsLoggedInAC(true));
     yield put(setAppInitializedAC(true));
 }
 
